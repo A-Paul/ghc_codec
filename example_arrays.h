@@ -1,26 +1,34 @@
+/*! \file */
 #include <inttypes.h>
 #include <stdio.h>
 
 #define DICT_LEN (0x30U)
 
 /*!
- * Reference data for a rfc7400 test/example case.
+ * rfc7400 test/example case.
  * 
- * Contains pointers to byte arrays (uint8_t*) with the data for:
- * payload Reference for source of a compression, target of a decompression.
- * dictionary Pre filled lookup buffer.
- * compressed Reference for target of a compression, source of a decompression. 
+ * Reference data collection contains pointers to byte arrays (uint8_t*)
+ * with the data for:
+ * - payload Reference for source of a compression, target of a decompression.
+ * - dictionary Pre filled lookup buffer.
+ * - compressed Reference for target of a compression, source of a decompression.
  */
 struct ghc_case_ref {
-    size_t   payload_len;
-    size_t   dictionary_len;
-    size_t   compressed_len;
-    uint8_t* payload;           /*!> Uncompressed header payload */
-    uint8_t* dictionary;        /*!>  */
-    uint8_t* compressed;        /*!> Compressed payload. */
+    /*! @{ \name Array size data.
+     *  Lengh fields for the correspondig arrays.
+     */
+    size_t   payload_len;       /*!< #payload array size */
+    size_t   dictionary_len;    /*!< #dictionary array size */
+    size_t   compressed_len;    /*!< #compressed array size */
+    /*! @} */
+    /*! @{ \name Test data array references. */
+    uint8_t* payload;           /*!< Uncompressed header payload */
+    uint8_t* dictionary;        /*!< Predefined lookup buffer */
+    uint8_t* compressed;        /*!< Compressed #payload. */
+    /*! @} */
 };
 
-/*
+/*! \name rfc7400 test data
  * Byte arrays containing the data listed in the Example section of rfc7400.
  * For each example there is an array with the name template "ghc_expl_NN-SSSS"
  * with "NN" being the number of the figure describing the relatd case. And
@@ -28,9 +36,9 @@ struct ghc_case_ref {
  * - "plod" Payload
  * - "dict" Dictionary
  * - "comp" Compressed
+ * @{
+ * \see https://tools.ietf.org/html/rfc7400#appendix-A
  */
-
-
 /* RFC7400, Appendix A.  Examples, Figure 08 */
 /* 8 bytes */
 uint8_t ghc_expl_08_plod[] = {
@@ -259,3 +267,4 @@ uint8_t ghc_expl_17_comp[] = {
     0xc6, 0x89, 0x2f, 0x32, 0x26, 0x9a, 0x16, 0x4e, 0x31, 0x7e, 0x9f, 0x20, 0x92, 0x92, 0x81, 0x05,
     0x02, 0xc0, 0xa8, 0x01, 0x00
 };
+/*! @} */ /* End rfc7400 test data */
