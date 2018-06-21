@@ -128,100 +128,90 @@ struct ghc_case_ref const ghc_suite_case_refs_fail[] = {
 
 struct ghc_case_ref ghc_suite_case_refs[] = {
 {
-    /* 8, */
     (sizeof ghc_expl_08_plod)/(sizeof ghc_expl_08_plod[0]),
     DICT_LEN,
-    6,
+    (sizeof ghc_expl_08_comp)/(sizeof ghc_expl_08_comp[0]),
     ghc_expl_08_plod,
     ghc_expl_08_dict,
     ghc_expl_08_comp
 },
 
 {
-    /* 92, */
     (sizeof ghc_expl_09_plod)/(sizeof ghc_expl_09_plod[0]),
     DICT_LEN,
-    52,
+    (sizeof ghc_expl_09_comp)/(sizeof ghc_expl_09_comp[0]),
     ghc_expl_09_plod,
     ghc_expl_09_dict,
     ghc_expl_09_comp
 },
 
 {
-    /* 50, */
     (sizeof ghc_expl_10_plod)/(sizeof ghc_expl_10_plod[0]),
     DICT_LEN,
-    27,
+    (sizeof ghc_expl_10_comp)/(sizeof ghc_expl_10_comp[0]),
     ghc_expl_10_plod,
     ghc_expl_10_dict,
     ghc_expl_10_comp
 },
 
 {
-    /* 48, */
     (sizeof ghc_expl_11_plod)/(sizeof ghc_expl_11_plod[0]),
     DICT_LEN,
-    26,
+    (sizeof ghc_expl_11_comp)/(sizeof ghc_expl_11_comp[0]),
     ghc_expl_11_plod,
     ghc_expl_11_dict,
     ghc_expl_11_comp
 },
 
 {
-    /* 48, */
     (sizeof ghc_expl_12_plod)/(sizeof ghc_expl_12_plod[0]),
     DICT_LEN,
-    27,
+    (sizeof ghc_expl_12_comp)/(sizeof ghc_expl_12_comp[0]),
     ghc_expl_12_plod,
     ghc_expl_12_dict,
     ghc_expl_12_comp
 },
 
 {
-    /* 24, */
     (sizeof ghc_expl_13_plod)/(sizeof ghc_expl_13_plod[0]),
     DICT_LEN,
-    12,
+    (sizeof ghc_expl_13_comp)/(sizeof ghc_expl_13_comp[0]),
     ghc_expl_13_plod,
     ghc_expl_13_dict,
     ghc_expl_13_comp
 },
 
 {
-    /* 96, */
     (sizeof ghc_expl_14_plod)/(sizeof ghc_expl_14_plod[0]),
     DICT_LEN,
-    58,
+    (sizeof ghc_expl_14_comp)/(sizeof ghc_expl_14_comp[0]),
     ghc_expl_14_plod,
     ghc_expl_14_dict,
     ghc_expl_14_comp
 },
 
 {
-    /* 42, */
     (sizeof ghc_expl_15_plod)/(sizeof ghc_expl_15_plod[0]),
     DICT_LEN,
-    27,
+    (sizeof ghc_expl_15_comp)/(sizeof ghc_expl_15_comp[0]),
     ghc_expl_15_plod,
     ghc_expl_15_dict,
     ghc_expl_15_comp
 },
 
 {
-    /* 35, */
     (sizeof ghc_expl_16_plod)/(sizeof ghc_expl_16_plod[0]),
     DICT_LEN,
-    22,
+    (sizeof ghc_expl_16_comp)/(sizeof ghc_expl_16_comp[0]),
     ghc_expl_16_plod,
     ghc_expl_16_dict,
     ghc_expl_16_comp
 },
 
 {
-    /* 67, */
     (sizeof ghc_expl_17_plod)/(sizeof ghc_expl_17_plod[0]),
     DICT_LEN,
-    53,
+    (sizeof ghc_expl_17_comp)/(sizeof ghc_expl_17_comp[0]),
     ghc_expl_17_plod,
     ghc_expl_17_dict,
     ghc_expl_17_comp
