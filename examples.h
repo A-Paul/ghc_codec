@@ -1,7 +1,9 @@
 #include "tests/rfc7400_examples.h"
 
-struct ghc_case_ref ghc_case_08 = {
-    8,
+/* Why is this failing for */
+struct ghc_case_ref const ghc_case_08 = {
+    /* 8, */
+    (sizeof ghc_expl_08_plod)/(sizeof ghc_expl_08_plod[0]),
     DICT_LEN,
     6,
     ghc_expl_08_plod,
@@ -11,7 +13,8 @@ struct ghc_case_ref ghc_case_08 = {
 
 
 struct ghc_case_ref ghc_case_09 = {
-    92,
+    /* 92, */
+    (sizeof ghc_expl_09_plod)/(sizeof ghc_expl_09_plod[0]),
     DICT_LEN,
     52,
     ghc_expl_09_plod,
@@ -20,7 +23,8 @@ struct ghc_case_ref ghc_case_09 = {
 };
 
 struct ghc_case_ref ghc_case_10 = {
-    50,
+    /* 50, */
+    (sizeof ghc_expl_10_plod)/(sizeof ghc_expl_10_plod[0]),
     DICT_LEN,
     27,
     ghc_expl_10_plod,
@@ -29,7 +33,8 @@ struct ghc_case_ref ghc_case_10 = {
 };
 
 struct ghc_case_ref ghc_case_11 = {
-    48,
+    /* 48, */
+    (sizeof ghc_expl_11_plod)/(sizeof ghc_expl_11_plod[0]),
     DICT_LEN,
     26,
     ghc_expl_11_plod,
@@ -38,7 +43,8 @@ struct ghc_case_ref ghc_case_11 = {
 };
 
 struct ghc_case_ref ghc_case_12 = {
-    48,
+    /* 48, */
+    (sizeof ghc_expl_12_plod)/(sizeof ghc_expl_12_plod[0]),
     DICT_LEN,
     27,
     ghc_expl_12_plod,
@@ -47,7 +53,8 @@ struct ghc_case_ref ghc_case_12 = {
 };
 
 struct ghc_case_ref ghc_case_13 = {
-    24,
+    /* 24, */
+    (sizeof ghc_expl_13_plod)/(sizeof ghc_expl_13_plod[0]),
     DICT_LEN,
     12,
     ghc_expl_13_plod,
@@ -56,7 +63,8 @@ struct ghc_case_ref ghc_case_13 = {
 };
 
 struct ghc_case_ref ghc_case_14 = {
-    96,
+    /* 96, */
+    (sizeof ghc_expl_14_plod)/(sizeof ghc_expl_14_plod[0]),
     DICT_LEN,
     58,
     ghc_expl_14_plod,
@@ -65,7 +73,8 @@ struct ghc_case_ref ghc_case_14 = {
 };
 
 struct ghc_case_ref ghc_case_15 = {
-    42,
+    /* 42, */
+    (sizeof ghc_expl_15_plod)/(sizeof ghc_expl_15_plod[0]),
     DICT_LEN,
     27,
     ghc_expl_15_plod,
@@ -74,7 +83,8 @@ struct ghc_case_ref ghc_case_15 = {
 };
 
 struct ghc_case_ref ghc_case_16 = {
-    35,
+    /* 35, */
+    (sizeof ghc_expl_16_plod)/(sizeof ghc_expl_16_plod[0]),
     DICT_LEN,
     22,
     ghc_expl_16_plod,
@@ -83,10 +93,137 @@ struct ghc_case_ref ghc_case_16 = {
 };
 
 struct ghc_case_ref ghc_case_17 = {
-    67,
+    /* 67, */
+    (sizeof ghc_expl_17_plod)/(sizeof ghc_expl_17_plod[0]),
     DICT_LEN,
     53,
     ghc_expl_17_plod,
     ghc_expl_17_dict,
     ghc_expl_17_comp
+};
+
+/*
+ * Failing with:
+ * examples.h:107:5: error: initializer element is not constant
+ *      ghc_case_08,
+ *      ^~~~~~~~~~~
+ * examples.h:107:5: note: (near initialization for ‘ghc_suite_case_refs[0]’)
+ * [...]
+ * examples.h:116:5: note: (near initialization for ‘ghc_suite_case_refs[9]’)
+ */
+/*  
+struct ghc_case_ref const ghc_suite_case_refs_fail[] = {
+    ghc_case_08,
+    ghc_case_09,
+    ghc_case_10,
+    ghc_case_11,
+    ghc_case_12,
+    ghc_case_13,
+    ghc_case_14,
+    ghc_case_15,
+    ghc_case_16,
+    ghc_case_17
+};
+*/
+
+struct ghc_case_ref ghc_suite_case_refs[] = {
+{
+    /* 8, */
+    (sizeof ghc_expl_08_plod)/(sizeof ghc_expl_08_plod[0]),
+    DICT_LEN,
+    6,
+    ghc_expl_08_plod,
+    ghc_expl_08_dict,
+    ghc_expl_08_comp
+},
+
+{
+    /* 92, */
+    (sizeof ghc_expl_09_plod)/(sizeof ghc_expl_09_plod[0]),
+    DICT_LEN,
+    52,
+    ghc_expl_09_plod,
+    ghc_expl_09_dict,
+    ghc_expl_09_comp
+},
+
+{
+    /* 50, */
+    (sizeof ghc_expl_10_plod)/(sizeof ghc_expl_10_plod[0]),
+    DICT_LEN,
+    27,
+    ghc_expl_10_plod,
+    ghc_expl_10_dict,
+    ghc_expl_10_comp
+},
+
+{
+    /* 48, */
+    (sizeof ghc_expl_11_plod)/(sizeof ghc_expl_11_plod[0]),
+    DICT_LEN,
+    26,
+    ghc_expl_11_plod,
+    ghc_expl_11_dict,
+    ghc_expl_11_comp
+},
+
+{
+    /* 48, */
+    (sizeof ghc_expl_12_plod)/(sizeof ghc_expl_12_plod[0]),
+    DICT_LEN,
+    27,
+    ghc_expl_12_plod,
+    ghc_expl_12_dict,
+    ghc_expl_12_comp
+},
+
+{
+    /* 24, */
+    (sizeof ghc_expl_13_plod)/(sizeof ghc_expl_13_plod[0]),
+    DICT_LEN,
+    12,
+    ghc_expl_13_plod,
+    ghc_expl_13_dict,
+    ghc_expl_13_comp
+},
+
+{
+    /* 96, */
+    (sizeof ghc_expl_14_plod)/(sizeof ghc_expl_14_plod[0]),
+    DICT_LEN,
+    58,
+    ghc_expl_14_plod,
+    ghc_expl_14_dict,
+    ghc_expl_14_comp
+},
+
+{
+    /* 42, */
+    (sizeof ghc_expl_15_plod)/(sizeof ghc_expl_15_plod[0]),
+    DICT_LEN,
+    27,
+    ghc_expl_15_plod,
+    ghc_expl_15_dict,
+    ghc_expl_15_comp
+},
+
+{
+    /* 35, */
+    (sizeof ghc_expl_16_plod)/(sizeof ghc_expl_16_plod[0]),
+    DICT_LEN,
+    22,
+    ghc_expl_16_plod,
+    ghc_expl_16_dict,
+    ghc_expl_16_comp
+},
+
+{
+    /* 67, */
+    (sizeof ghc_expl_17_plod)/(sizeof ghc_expl_17_plod[0]),
+    DICT_LEN,
+    53,
+    ghc_expl_17_plod,
+    ghc_expl_17_dict,
+    ghc_expl_17_comp
+}
 };
