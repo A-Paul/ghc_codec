@@ -1,3 +1,6 @@
+#ifnedef GHC_CODEC_INTERN
+#define  GHC_CODEC_INTERN
+
 #include <inttypes.h>
 #include <ghc.h>
 
@@ -44,4 +47,28 @@ inline void set_backrefs(
            *s = (backref & GHC_BREF_OFFS_MASK) + *sa + *n;
            *na = 0;
            *sa = 0;
+
+/*!
+ * 
+ */
+inline uint8_t compose_count(
+    uint8_t backref,
+    uint8_t extarg)
+{
+    return ((backref & GHC_BREF_CNT_MASK) >> GHC_BREF_CNT_RSHIFT) +
+           ((extarg  & GHC_EXT_CNT_MASK)  >> GHC_EXT_CNT_RSHIFT) +
+             GHC_BREF_CNT_ADD;
 }
+
+
+inline uint8_t compose_offset(
+    uint8_t backref,
+    uint8_t extarg,
+    uint8_t count)
+{
+    return (backref & GHC_BREF_OFFS_MASK) +
+           ((extarg & GHC_EXT_OFFS_MASK)  << GHC_EXT_OFFS_LSHIFT) +
+             count;
+}
+
+#endif /* GHC_CODEC_INTERN */
