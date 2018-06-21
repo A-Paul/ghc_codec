@@ -1,4 +1,4 @@
-#include "example_arrays.h"
+#include "tests/rfc7400_examples.h"
 
 struct ghc_case_ref ghc_case_08 = {
     8,
