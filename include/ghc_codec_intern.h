@@ -1,5 +1,5 @@
-#ifnedef GHC_CODEC_INTERN
-#define  GHC_CODEC_INTERN
+#ifndef GHC_CODEC_INTERN_H
+#define GHC_CODEC_INTERN_H
 
 #include <inttypes.h>
 #include <ghc.h>
@@ -12,7 +12,7 @@
  * \param[out] sa offset extension
  * \param[in]  extarg raw bytecode for set extension action.
  */
-inline void set_extensions(
+static inline void set_extensions(
     uint8_t* const na,
     uint8_t* const sa,
     uint8_t extarg)
@@ -35,7 +35,7 @@ inline void set_extensions(
  * \param[inout]  sa offset extension. Reset to zero after return.
  * \param[in]     extarg raw bytecode for set extension action.
  */
-inline void set_backrefs(
+static inline void set_backrefs(
     uint8_t* const n,
     uint8_t* const s,
     uint8_t* const na,
@@ -47,28 +47,73 @@ inline void set_backrefs(
            *s = (backref & GHC_BREF_OFFS_MASK) + *sa + *n;
            *na = 0;
            *sa = 0;
+}
+
 
 /*!
+ * Copy literal data bytes.
  * 
+ * \param[inout]  target buffer.
+ * \param[inout]  pos_target position index.
+ * \param[inout]  pos_source position index.
+ * \param[in]     source buffer.
+ * \param[in]     n number of copied bytes.
  */
-inline uint8_t compose_count(
-    uint8_t backref,
-    uint8_t extarg)
+static inline void copy_literal(
+    uint8_t*  const target,
+    uint16_t* const pos_target,
+    uint16_t* const pos_source,
+    const uint8_t*  const source,
+    uint8_t n)
 {
-    return ((backref & GHC_BREF_CNT_MASK) >> GHC_BREF_CNT_RSHIFT) +
-           ((extarg  & GHC_EXT_CNT_MASK)  >> GHC_EXT_CNT_RSHIFT) +
-             GHC_BREF_CNT_ADD;
+    while(n) {
+        ++(*pos_source);
+        target[*pos_target] = source[*pos_source];
+        ++(*pos_target);
+        --n;
+    }
 }
 
 
-inline uint8_t compose_offset(
-    uint8_t backref,
-    uint8_t extarg,
-    uint8_t count)
+/*!
+ * Copy data bytes from dictionary.
+ *
+ * \param[inout]  target buffer.
+ * \param[inout]  pos_target position index.
+ * \param[in]     n number of copied bytes.
+ * \param[in]     s backreference index.
+ */
+static inline void append_backreference(
+    uint8_t*  const target,
+    uint16_t* const pos_target,
+    uint8_t n,
+    uint8_t s)
 {
-    return (backref & GHC_BREF_OFFS_MASK) +
-           ((extarg & GHC_EXT_OFFS_MASK)  << GHC_EXT_OFFS_LSHIFT) +
-             count;
+    while(n) {
+        target[*pos_target] = target[*pos_target - s];
+        ++(*pos_target);
+        --n;
+    }
 }
 
-#endif /* GHC_CODEC_INTERN */
+
+/*!
+ * Append zero bytes.
+ *
+ * \param[inout]  target buffer.
+ * \param[inout]  pos_target position index.
+ * \param[in]     n number of copied bytes.
+ */
+static inline void append_zeros(
+    uint8_t*  const target,
+    uint16_t* const pos_target,
+    uint8_t n)
+{
+    while(n) {
+        target[*pos_target] = 0;
+        ++(*pos_target);
+        --n;
+    }
+}
+
+#endif /* GHC_CODEC_INTERN_H */

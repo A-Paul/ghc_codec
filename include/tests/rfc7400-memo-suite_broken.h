@@ -1,98 +1,126 @@
-#ifndef GHC_EXAMPLES_TESTSUITE_H
-#define GHC_EXAMPLES_TESTSUITE_H
-
 #include "tests/rfc7400_examples.h"
 
-struct ghc_case_ref ghc_suite_case_refs[] = {
-{
+/* Why is this failing for */
+struct ghc_case_ref const ghc_case_08 = {
+    /* 8, */
     (sizeof ghc_expl_08_plod)/(sizeof ghc_expl_08_plod[0]),
     DICT_LEN,
-    (sizeof ghc_expl_08_comp)/(sizeof ghc_expl_08_comp[0]),
+    6,
     ghc_expl_08_plod,
     ghc_expl_08_dict,
     ghc_expl_08_comp
-},
+};
 
-{
+
+struct ghc_case_ref ghc_case_09 = {
+    /* 92, */
     (sizeof ghc_expl_09_plod)/(sizeof ghc_expl_09_plod[0]),
     DICT_LEN,
-    (sizeof ghc_expl_09_comp)/(sizeof ghc_expl_09_comp[0]),
+    52,
     ghc_expl_09_plod,
     ghc_expl_09_dict,
     ghc_expl_09_comp
-},
+};
 
-{
+struct ghc_case_ref ghc_case_10 = {
+    /* 50, */
     (sizeof ghc_expl_10_plod)/(sizeof ghc_expl_10_plod[0]),
     DICT_LEN,
-    (sizeof ghc_expl_10_comp)/(sizeof ghc_expl_10_comp[0]),
+    27,
     ghc_expl_10_plod,
     ghc_expl_10_dict,
     ghc_expl_10_comp
-},
+};
 
-{
+struct ghc_case_ref ghc_case_11 = {
+    /* 48, */
     (sizeof ghc_expl_11_plod)/(sizeof ghc_expl_11_plod[0]),
     DICT_LEN,
-    (sizeof ghc_expl_11_comp)/(sizeof ghc_expl_11_comp[0]),
+    26,
     ghc_expl_11_plod,
     ghc_expl_11_dict,
     ghc_expl_11_comp
-},
+};
 
-{
+struct ghc_case_ref ghc_case_12 = {
+    /* 48, */
     (sizeof ghc_expl_12_plod)/(sizeof ghc_expl_12_plod[0]),
     DICT_LEN,
-    (sizeof ghc_expl_12_comp)/(sizeof ghc_expl_12_comp[0]),
+    27,
     ghc_expl_12_plod,
     ghc_expl_12_dict,
     ghc_expl_12_comp
-},
+};
 
-{
+struct ghc_case_ref ghc_case_13 = {
+    /* 24, */
     (sizeof ghc_expl_13_plod)/(sizeof ghc_expl_13_plod[0]),
     DICT_LEN,
-    (sizeof ghc_expl_13_comp)/(sizeof ghc_expl_13_comp[0]),
+    12,
     ghc_expl_13_plod,
     ghc_expl_13_dict,
     ghc_expl_13_comp
-},
+};
 
-{
+struct ghc_case_ref ghc_case_14 = {
+    /* 96, */
     (sizeof ghc_expl_14_plod)/(sizeof ghc_expl_14_plod[0]),
     DICT_LEN,
-    (sizeof ghc_expl_14_comp)/(sizeof ghc_expl_14_comp[0]),
+    58,
     ghc_expl_14_plod,
     ghc_expl_14_dict,
     ghc_expl_14_comp
-},
+};
 
-{
+struct ghc_case_ref ghc_case_15 = {
+    /* 42, */
     (sizeof ghc_expl_15_plod)/(sizeof ghc_expl_15_plod[0]),
     DICT_LEN,
-    (sizeof ghc_expl_15_comp)/(sizeof ghc_expl_15_comp[0]),
+    27,
     ghc_expl_15_plod,
     ghc_expl_15_dict,
     ghc_expl_15_comp
-},
+};
 
-{
+struct ghc_case_ref ghc_case_16 = {
+    /* 35, */
     (sizeof ghc_expl_16_plod)/(sizeof ghc_expl_16_plod[0]),
     DICT_LEN,
-    (sizeof ghc_expl_16_comp)/(sizeof ghc_expl_16_comp[0]),
+    22,
     ghc_expl_16_plod,
     ghc_expl_16_dict,
     ghc_expl_16_comp
-},
+};
 
-{
+struct ghc_case_ref ghc_case_17 = {
+    /* 67, */
     (sizeof ghc_expl_17_plod)/(sizeof ghc_expl_17_plod[0]),
     DICT_LEN,
-    (sizeof ghc_expl_17_comp)/(sizeof ghc_expl_17_comp[0]),
+    53,
     ghc_expl_17_plod,
     ghc_expl_17_dict,
     ghc_expl_17_comp
-}
 };
 
-#endif /* !GHC_EXAMPLES_TESTSUITE_H */
+/*
+ * Failing with:
+ * examples.h:107:5: error: initializer element is not constant
+ *      ghc_case_08,
+ *      ^~~~~~~~~~~
+ * examples.h:107:5: note: (near initialization for ‘ghc_suite_case_refs[0]’)
+ * [...]
+ * examples.h:116:5: note: (near initialization for ‘ghc_suite_case_refs[9]’)
+ */
+
+struct ghc_case_ref const ghc_suite_case_refs_fail[] = {
+    ghc_case_08,
+    ghc_case_09,
+    ghc_case_10,
+    ghc_case_11,
+    ghc_case_12,
+    ghc_case_13,
+    ghc_case_14,
+    ghc_case_15,
+    ghc_case_16,
+    ghc_case_17
+};
