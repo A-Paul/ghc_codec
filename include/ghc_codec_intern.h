@@ -1,5 +1,5 @@
-#ifnedef GHC_CODEC_INTERN
-#define  GHC_CODEC_INTERN
+#ifndef GHC_CODEC_INTERN
+#define GHC_CODEC_INTERN
 
 #include <inttypes.h>
 #include <ghc.h>
@@ -47,6 +47,7 @@ inline void set_backrefs(
            *s = (backref & GHC_BREF_OFFS_MASK) + *sa + *n;
            *na = 0;
            *sa = 0;
+}
 
 /*!
  * 
