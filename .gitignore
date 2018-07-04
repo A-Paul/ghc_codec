@@ -1,7 +1,14 @@
 # -*- mode: gitignore; -*-
+# editor clutter
 *~
 \#*\#
 
+# Doxygen
+/doc/doxygen_sqlite3.db
+/doc/html/
+/doc/latex/
+
+# C specific files
 *.o
 *.out
 GPATH
