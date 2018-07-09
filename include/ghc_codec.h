@@ -26,7 +26,7 @@ struct ghc_coder {
  * \param[inout] target compressed byte array.
  * \param[inout] tn number of elements in target.
  */
-int ghc_compress (uint8_t* source, size_t sn, uint8_t* target, size_t tn);
+int ghc_compress (struct ghc_coder* encoder);
 
 
 /*!
@@ -35,6 +35,6 @@ int ghc_compress (uint8_t* source, size_t sn, uint8_t* target, size_t tn);
  * \param[inout] target uncompressed byte array.
  * \param[inout] tn number of elements in target.
  */
-int ghc_decompress (uint8_t* source, size_t sn, uint8_t* target, size_t tn);
+int ghc_decompress (struct ghc_coder* decoder);
 
 #endif /* GHC_CODEC_H */

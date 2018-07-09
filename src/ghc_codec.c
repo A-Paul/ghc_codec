@@ -8,19 +8,19 @@
 #include "ghc_codec.h"
 #include "ghc_codec_intern.h"
 
-int ghc_compress(uint8_t* source, size_t sn, uint8_t* target, size_t tn)
+int ghc_compress(struct ghc_coder* encoder)
 {
     int retval = -1;
-    (void)source;
-    (void)sn;
-    (void)target;
-    (void)tn;
+    (void)encoder->compressed;
+    (void)encoder->size_comp;
+    (void)encoder->uncompressed;
+    (void)encoder->size_unco;
 
     return retval;
 }
 
 
-int ghc_decompress ( uint8_t* source, size_t sn, uint8_t* target, size_t tn)
+int ghc_decompress ( struct ghc_coder* decoder)
 {
     int retval = -1;
     int clean  = 0;
@@ -28,13 +28,13 @@ int ghc_decompress ( uint8_t* source, size_t sn, uint8_t* target, size_t tn)
     /* Backreference and extension values. Naming according to rfc7400
      * section 2
      */
-    uint8_t na = 0;        /*!< Extension value for @n. */
-    uint8_t sa = 0;        /*!< Extension value for @s. */
-    uint8_t n  = 0;        /*!< Number of backreference bytes.*/
-    uint8_t s  = 0;        /*!< Index of backreference start. */
+    decoder->na = 0;        /*!< Extension value for @n. */
+    decoder->sa = 0;        /*!< Extension value for @s. */
+    uint8_t n  = 0;         /*!< Number of backreference bytes.*/
+    uint8_t s  = 0;         /*!< Index of backreference start. */
 
-    uint16_t pos_source = 0;
-    uint16_t pos_target = GHC_DICT_PRE_LEN;
+    decoder->pos_comp = 0;
+    decoder->pos_unco = GHC_DICT_PRE_LEN;
 
     /*
      * Goes into ghc.h later
@@ -48,24 +48,25 @@ int ghc_decompress ( uint8_t* source, size_t sn, uint8_t* target, size_t tn)
 
 
 
-    if ( NULL != source || NULL != target) {
+    if ( NULL != decoder->compressed || NULL != decoder->uncompressed) {
         clean = 1;
     }
 
     while (clean) {
 
-        if ( GHC_COPY_BC == (source[pos_source] & GHC_COPY_MASK)) {
+        if ( GHC_COPY_BC == (decoder->compressed[decoder->pos_comp] & GHC_COPY_MASK)) {
             /*
              * Assertions: preconditions
-             * sn >= pos_source + n + 1 (command byte)
-             * tn >= pos_target + n
+             * decoder->size_comp >= decoder->pos_comp + n + 1 (command byte)
+             * decoder->size_unco >= decoder->pos_unco + n
              * n < 96
              */
-            n = source[pos_source] & GHC_COPY_CNT_MASK;
-            if (( sn >= pos_source + n + 1) &&
-                ( tn >= pos_target + n) && n < 96) {
-                //                printf("X:%02i\n",source[pos_source]);
-                copy_literal(target, &pos_target, &pos_source, source, n);
+            n = decoder->compressed[decoder->pos_comp] & GHC_COPY_CNT_MASK;
+            if (( decoder->size_comp >= decoder->pos_comp + n + 1) &&
+                ( decoder->size_unco >= decoder->pos_unco + n) && n < 96) {
+                // printf("X:%02i\n",decoder->compressed[decoder->pos_comp]);
+                copy_literal(decoder->uncompressed, &decoder->pos_unco,
+                             &decoder->pos_comp, decoder->compressed, n);
             } else {
                 clean = 0;
                 retval = -30;
@@ -73,39 +74,40 @@ int ghc_decompress ( uint8_t* source, size_t sn, uint8_t* target, size_t tn)
 
             /*
              * postconditions
-             * pos_source += n + 1
-             * pos_target += n
+             * decoder->pos_comp += n + 1
+             * decoder->pos_unco += n
              */
         }
-        else if ( GHC_ZEROS_BC == (source[pos_source] & GHC_ZEROS_MASK)) {
+        else if ( GHC_ZEROS_BC == (decoder->compressed[decoder->pos_comp] & GHC_ZEROS_MASK)) {
             /*
              * Assertions: preconditions
-             * sn >= pos_source + 1 (command byte)
-             * tn >= pos_target + n
+             * decoder->size_comp >= decoder->pos_comp + 1 (command byte)
+             * decoder->size_unco >= decoder->pos_unco + n
              */
-            n = (source[pos_source] & GHC_ZEROS_CNT_MASK) + 2;
-            if (pos_target <= tn - n) {
-                append_zeros(target, &pos_target, n);
+            n = (decoder->compressed[decoder->pos_comp] & GHC_ZEROS_CNT_MASK) + 2;
+            if (decoder->pos_unco <= decoder->size_unco - n) {
+                append_zeros(decoder->uncompressed, &decoder->pos_unco, n);
             } else {
                 clean = 0;
                 retval = -31;
             }
             /*
              * postconditions
-             * pos_target += n
+             * decoder->pos_unco += n
              */
         }
-        else if ( GHC_BREF_BC == (source[pos_source] & GHC_BREF_MASK)) {
-            set_backrefs(&n, &s, &na, &sa, source[pos_source]);
+        else if ( GHC_BREF_BC == (decoder->compressed[decoder->pos_comp] & GHC_BREF_MASK)) {
+            set_backrefs(&n, &s, &decoder->na, &decoder->sa, decoder->compressed[decoder->pos_comp]);
             /*
              * Assertions: preconditions
-             * tn >= pos_target + n (number of copied bytes inside re-
+             * decoder->size_unco >= decoder->pos_unco + n (number of copied bytes inside re-
              * maining free buffer)
              * s  <= pos_tartget (backref index inside dictionary)
              */
-            printf("pt:%03u:tn:%03u:s:%03u:n:%03u\n", pos_target, tn,  s, n);
-            if ((pos_target <= tn - n) && (s <= pos_target)) {
-                append_backreference(target, &pos_target, n, s);
+            printf("pt:%03u:decoder->size_unco:%03u:s:%03u:n:%03u\n",
+                   decoder->pos_unco, decoder->size_unco,  s, n);
+            if ((decoder->pos_unco <= decoder->size_unco - n) && (s <= decoder->pos_unco)) {
+                append_backreference(decoder->uncompressed, &decoder->pos_unco, n, s);
             } else {
                 clean = 0;
                 retval = -32;
@@ -113,13 +115,14 @@ int ghc_decompress ( uint8_t* source, size_t sn, uint8_t* target, size_t tn)
             /* postconditions
              * na := sa := 0
              */
-            na = 0;
-            sa = 0;
+            decoder->na = 0;
+            decoder->sa = 0;
         }
-        else if ( GHC_EXT_BC == (source[pos_source] & GHC_EXT_MASK)) {
-            set_extensions(&na, &sa, source[pos_source]);
+        else if ( GHC_EXT_BC == (decoder->compressed[decoder->pos_comp] & GHC_EXT_MASK)) {
+            set_extensions(&decoder->na, &decoder->sa,
+                           decoder->compressed[decoder->pos_comp]);
         }
-        else if ( GHC_STOP_BC == source[pos_source]) {
+        else if ( GHC_STOP_BC == decoder->compressed[decoder->pos_comp]) {
             /*
              * Assertions: NN
              */
@@ -129,15 +132,16 @@ int ghc_decompress ( uint8_t* source, size_t sn, uint8_t* target, size_t tn)
             retval = -34;
         }
         /*
-         * Assertions: 0 < sn - pos_source
-         * pos_source
+         * Assertions: 0 < decoder->size_comp - decoder->pos_comp
+         * decoder->pos_comp
          */
 #if DEBUG == 1
-        printf("ps:%03d:pt:%03u:tn:%03u:s:%03u:n:%03u\n", pos_source, pos_target, tn, s, n);
+        printf("ps:%03d:pt:%03u:decoder->size_unco:%03u:s:%03u:n:%03u\n",
+               decoder->pos_comp, decoder->pos_unco, decoder->size_unco, s, n);
 #endif
-        if ( clean && (1 < (sn - pos_source))) {
-            retval = pos_source;
-            ++pos_source;
+        if ( clean && (1 < (decoder->size_comp - decoder->pos_comp))) {
+            retval = decoder->pos_comp;
+            ++decoder->pos_comp;
         } else {
             clean = 0;
         }

@@ -19,8 +19,8 @@ int main (void)
 
     uint8_t test_plod[GHC_DICT_PRE_LEN + RFC_EXAMPLES_PAYLOAD_MAX] = { 0 };
     uint8_t test_comp[RFC_EXAMPLES_COMPRESSED_MAX] = { 0 };
-    uint16_t sn;
-    uint16_t tn;
+
+    struct ghc_coder test_decoder;
 
     for (i=0; i < ghc_suite_case_refs[suite_case].dictionary_len; ++i) {
         test_plod[i] = ghc_suite_case_refs[suite_case].dictionary[i];
@@ -30,20 +30,23 @@ int main (void)
         test_comp[i] = ghc_suite_case_refs[suite_case].compressed[i];
     }
 
+    test_decoder.uncompressed = test_plod;
+    test_decoder.compressed = test_comp;
 
-    sn = ghc_suite_case_refs[suite_case].compressed_len;
-    tn = ghc_suite_case_refs[suite_case].dictionary_len +
-         ghc_suite_case_refs[suite_case].payload_len;
+    test_decoder.size_comp = ghc_suite_case_refs[suite_case].compressed_len;
+    test_decoder.size_unco = ghc_suite_case_refs[suite_case].dictionary_len +
+        ghc_suite_case_refs[suite_case].payload_len;
 
     printf("calling ghc_decompress(0x%p,%d,0x%p,%d)\n\n",
-           test_comp, sn, test_plod, tn);
-    result = ghc_decompress(test_comp, sn, test_plod, tn);
+           test_decoder.compressed, test_decoder.size_comp,
+           test_decoder.uncompressed, test_decoder.size_unco);
+    result = ghc_decompress(&test_decoder);
     printf("\nreturned with %03i\n", result);
 
     for (i=0; i < ghc_suite_case_refs[suite_case].payload_len; ++i) {
         printf("%03d:0x%02X:0x%02X,%c", i,
                ghc_suite_case_refs[suite_case].payload[i],
-               test_plod[DICT_LEN+i],
+               test_decoder.uncompressed[DICT_LEN+i],
                (((i+1) & 0x7) ? ' ' : '\n'));
     }
 
