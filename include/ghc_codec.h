@@ -3,6 +3,11 @@
 
 #include "stdint.h"
 
+
+#define SHOW_GHC_CODER(x) printf( "size_unco:%03lu,size_comp:%03lu,pos_unco:%03u,"\
+    "pos_comp:%03u, ns:%03u, sa:%03u\n",\
+    x->size_unco, x->size_comp, x->pos_unco, x->pos_comp, x->na, x->sa )
+
 /*
  * Draft for one/two struct(s) carrying the buffers and meta data
  * of (de)compressor.
@@ -26,7 +31,7 @@ struct ghc_coder {
  * \param[inout] target compressed byte array.
  * \param[inout] tn number of elements in target.
  */
-int ghc_compress (uint8_t* source, size_t sn, uint8_t* target, size_t tn);
+int ghc_compress (struct ghc_coder* encoder);
 
 
 /*!
@@ -35,6 +40,6 @@ int ghc_compress (uint8_t* source, size_t sn, uint8_t* target, size_t tn);
  * \param[inout] target uncompressed byte array.
  * \param[inout] tn number of elements in target.
  */
-int ghc_decompress (uint8_t* source, size_t sn, uint8_t* target, size_t tn);
+int ghc_decompress (struct ghc_coder* decoder);
 
 #endif /* GHC_CODEC_H */
