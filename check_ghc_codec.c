@@ -10,12 +10,16 @@
 #define RFC_EXAMPLES_PAYLOAD_MAX (0x60U)
 #define RFC_EXAMPLES_COMPRESSED_MAX (0x3AU)
 
+#define PRINT_ALL (0)
+
 int main (void)
 {
 
     int32_t result;
     uint8_t i;
     uint8_t suite_case = 2;
+    uint8_t comp_val1 = 0;
+    uint8_t comp_val2 = 0;
 
     uint8_t test_plod[GHC_DICT_PRE_LEN + RFC_EXAMPLES_PAYLOAD_MAX] = { 0 };
     uint8_t test_comp[RFC_EXAMPLES_COMPRESSED_MAX] = { 0 };
@@ -44,10 +48,12 @@ int main (void)
     printf("\nreturned with %03i\n", result);
 
     for (i=0; i < ghc_suite_case_refs[suite_case].payload_len; ++i) {
-        printf("%03d:0x%02X:0x%02X,%c", i,
-               ghc_suite_case_refs[suite_case].payload[i],
-               test_decoder.uncompressed[DICT_LEN+i],
-               (((i+1) & 0x7) ? ' ' : '\n'));
+        comp_val1 = ghc_suite_case_refs[suite_case].payload[i];
+        comp_val2 = test_decoder.uncompressed[DICT_LEN+i];
+        if (PRINT_ALL && (comp_val1 != comp_val2)) {
+            printf("%03d:0x%02X:0x%02X,%c", i, comp_val1, comp_val2,
+                   (((i+1) & 0x7) ? ' ' : '\n'));
+        }
     }
 
     puts("\n");
