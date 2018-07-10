@@ -9,6 +9,7 @@
 
 #define RFC_EXAMPLES_PAYLOAD_MAX (0x60U)
 #define RFC_EXAMPLES_COMPRESSED_MAX (0x3AU)
+#define RFC7400_EXAMPLES_FIRST (8U)
 
 #define PRINT_ALL (0)
 
@@ -16,8 +17,10 @@ int main (void)
 {
 
     int32_t result;
-    uint8_t i;
-    uint8_t suite_case = 2;
+    uint32_t i;
+    uint32_t num_cases = (sizeof ghc_suite_case_refs)/
+                         (sizeof ghc_suite_case_refs[0]);
+    uint8_t suite_case = 0;
     uint8_t comp_val1 = 0;
     uint8_t comp_val2 = 0;
 
@@ -26,37 +29,45 @@ int main (void)
 
     struct ghc_coder test_decoder;
 
-    for (i=0; i < ghc_suite_case_refs[suite_case].dictionary_len; ++i) {
-        test_plod[i] = ghc_suite_case_refs[suite_case].dictionary[i];
-    }
+    for ( suite_case = 0; suite_case < num_cases; ++suite_case) {
 
-    for (i=0; i < ghc_suite_case_refs[suite_case].compressed_len; ++i) {
-        test_comp[i] = ghc_suite_case_refs[suite_case].compressed[i];
-    }
-
-    test_decoder.uncompressed = test_plod;
-    test_decoder.compressed = test_comp;
-
-    test_decoder.size_comp = ghc_suite_case_refs[suite_case].compressed_len;
-    test_decoder.size_unco = ghc_suite_case_refs[suite_case].dictionary_len +
-        ghc_suite_case_refs[suite_case].payload_len;
-
-    printf("calling ghc_decompress(0x%p,%d,0x%p,%d)\n\n",
-           test_decoder.compressed, test_decoder.size_comp,
-           test_decoder.uncompressed, test_decoder.size_unco);
-    result = ghc_decompress(&test_decoder);
-    printf("\nreturned with %03i\n", result);
-
-    for (i=0; i < ghc_suite_case_refs[suite_case].payload_len; ++i) {
-        comp_val1 = ghc_suite_case_refs[suite_case].payload[i];
-        comp_val2 = test_decoder.uncompressed[DICT_LEN+i];
-        if (PRINT_ALL && (comp_val1 != comp_val2)) {
-            printf("%03d:0x%02X:0x%02X,%c", i, comp_val1, comp_val2,
-                   (((i+1) & 0x7) ? ' ' : '\n'));
+        for (i=0; i < ghc_suite_case_refs[suite_case].dictionary_len; ++i) {
+            test_plod[i] = ghc_suite_case_refs[suite_case].dictionary[i];
         }
-    }
 
-    puts("\n");
+        for (i=0; i < ghc_suite_case_refs[suite_case].compressed_len; ++i) {
+            test_comp[i] = ghc_suite_case_refs[suite_case].compressed[i];
+        }
+
+        test_decoder.uncompressed = test_plod;
+        test_decoder.compressed = test_comp;
+
+        test_decoder.size_comp = ghc_suite_case_refs[suite_case].compressed_len;
+        test_decoder.size_unco = ghc_suite_case_refs[suite_case].dictionary_len +
+            ghc_suite_case_refs[suite_case].payload_len;
+
+        printf("Check decoding of RFC7400 example %02i:\n"
+               "ghc_decompress(ghc_suite_case_refs[%02i])\n",
+               RFC7400_EXAMPLES_FIRST + suite_case, suite_case);
+        /*
+        printf("calling ghc_decompress(0x%p,%d,0x%p,%d)\n\n",
+            test_decoder.compressed, test_decoder.size_comp,
+            test_decoder.uncompressed, test_decoder.size_unco);
+        */
+        result = ghc_decompress(&test_decoder);
+        printf("\nreturned with %03i\n", result);
+
+        for (i=0; i < ghc_suite_case_refs[suite_case].payload_len; ++i) {
+            comp_val1 = ghc_suite_case_refs[suite_case].payload[i];
+            comp_val2 = test_decoder.uncompressed[DICT_LEN+i];
+            if (PRINT_ALL && (comp_val1 != comp_val2)) {
+                printf("%03d:0x%02X:0x%02X,%c", i, comp_val1, comp_val2,
+                    (((i+1) & 0x7) ? ' ' : '\n'));
+            }
+        }
+
+        puts("\n");
+    }
 
     return EXIT_SUCCESS;
 }
