@@ -3,6 +3,11 @@
 
 #include "stdint.h"
 
+
+#define SHOW_GHC_CODER(x) printf( "size_unco:%03lu,size_comp:%03lu,pos_unco:%03u,"\
+    "pos_comp:%03u, ns:%03u, sa:%03u\n",\
+    x->size_unco, x->size_comp, x->pos_unco, x->pos_comp, x->na, x->sa )
+
 /*
  * Draft for one/two struct(s) carrying the buffers and meta data
  * of (de)compressor.
