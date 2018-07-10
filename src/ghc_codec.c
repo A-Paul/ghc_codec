@@ -62,7 +62,7 @@ int ghc_decompress ( struct ghc_coder* decoder)
              * n < 96
              */
             n = decoder->compressed[decoder->pos_comp] & GHC_COPY_CNT_MASK;
-            if (( decoder->size_comp >= decoder->pos_comp + n + 1) &&
+            if (( decoder->size_comp >= decoder->pos_comp + n + 1U) &&
                 ( decoder->size_unco >= decoder->pos_unco + n) && n < 96) {
                 // printf("X:%02i\n",decoder->compressed[decoder->pos_comp]);
                 copy_literal(decoder->uncompressed, &decoder->pos_unco,
@@ -104,8 +104,10 @@ int ghc_decompress ( struct ghc_coder* decoder)
              * maining free buffer)
              * s  <= pos_tartget (backref index inside dictionary)
              */
-            printf("pt:%03u:decoder->size_unco:%03u:s:%03u:n:%03u\n",
-                   decoder->pos_unco, decoder->size_unco,  s, n);
+#if DEBUG == 1
+            printf("pt:%05d:decoder->size_unco:%05lu:s:%05u:n:%05u\n",
+                   decoder->pos_unco, decoder->size_unco, s, n);
+#endif
             if ((decoder->pos_unco <= decoder->size_unco - n) && (s <= decoder->pos_unco)) {
                 append_backreference(decoder->uncompressed, &decoder->pos_unco, n, s);
             } else {
@@ -136,7 +138,7 @@ int ghc_decompress ( struct ghc_coder* decoder)
          * decoder->pos_comp
          */
 #if DEBUG == 1
-        printf("ps:%03d:pt:%03u:decoder->size_unco:%03u:s:%03u:n:%03u\n",
+        printf("ps:%05d:pt:%05d:decoder->size_unco:%03lu:s:%03u:n:%03u\n",
                decoder->pos_comp, decoder->pos_unco, decoder->size_unco, s, n);
 #endif
         if ( clean && (1 < (decoder->size_comp - decoder->pos_comp))) {
