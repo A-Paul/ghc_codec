@@ -92,19 +92,16 @@ static inline void append_backreference(
 
 /*!
  * Append zero bytes.
+ * Limits are not validated and have to be asserted before invocation.
  *
- * \param[inout]  target buffer.
- * \param[inout]  pos_target position index.
- * \param[in]     n number of copied bytes.
+ * \param[inout]  decoder.
+ * \param[in]     n number of copied zero bytes.
  */
-static inline void append_zeros(
-    uint8_t*  const target,
-    uint16_t* const pos_target,
-    uint8_t n)
+static inline void append_zeros(struct ghc_coder* decoder, uint8_t n)
 {
     while(n) {
-        target[*pos_target] = 0;
-        ++(*pos_target);
+        decoder->uncompressed[decoder->pos_unco] = 0x0U;
+        ++(decoder->pos_unco);
         --n;
     }
 }
