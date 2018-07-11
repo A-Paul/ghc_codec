@@ -100,7 +100,7 @@ int ghc_decompress ( struct ghc_coder* decoder)
              */
         }
         else if ( GHC_BREF_BC == (decoder->compressed[decoder->pos_comp] & GHC_BREF_MASK)) {
-            set_backrefs(&n, &s, &decoder->na, &decoder->sa, decoder->compressed[decoder->pos_comp]);
+            set_backrefs(&n, &s, decoder);
             /*
              * Assertions: preconditions
              * decoder->size_unco >= decoder->pos_unco + n (number of copied bytes inside re-
@@ -122,8 +122,7 @@ int ghc_decompress ( struct ghc_coder* decoder)
              */
         }
         else if ( GHC_EXT_BC == (decoder->compressed[decoder->pos_comp] & GHC_EXT_MASK)) {
-            set_extensions(&decoder->na, &decoder->sa,
-                           decoder->compressed[decoder->pos_comp]);
+            set_extensions(decoder);
         }
         else if ( GHC_STOP_BC == decoder->compressed[decoder->pos_comp]) {
             /*

@@ -8,18 +8,16 @@
 /*!
  * Extract extension values.
  *
- * \param[out] na counter extension
- * \param[out] sa offset extension
- * \param[in]  extarg raw bytecode for set extension action.
+ * \param[inout]  decoder.
  */
-static inline void set_extensions(
-    uint8_t* const na,
-    uint8_t* const sa,
-    uint8_t extarg)
+static inline void set_extensions(struct ghc_coder* decoder)
 {
-           *na = (extarg & GHC_EXT_CNT_MASK)  >> GHC_EXT_CNT_RSHIFT;
-           *sa = (extarg & GHC_EXT_OFFS_MASK) << GHC_EXT_OFFS_LSHIFT;
+    decoder->na = (decoder->compressed[decoder->pos_comp] &
+                  GHC_EXT_CNT_MASK)  >> GHC_EXT_CNT_RSHIFT;
+    decoder->sa = (decoder->compressed[decoder->pos_comp] &
+                  GHC_EXT_OFFS_MASK) << GHC_EXT_OFFS_LSHIFT;
 }
+
 
 /*!
  * Extract back reference values.
@@ -31,22 +29,15 @@ static inline void set_extensions(
  *
  * \param[out]    n combined counter value
  * \param[out]    s combined offset value
- * \param[inout]  na counter extension. Reset to zero after return.
- * \param[inout]  sa offset extension. Reset to zero after return.
- * \param[in]     extarg raw bytecode for set extension action.
+ * \param[inout]  decoder.
  */
 static inline void set_backrefs(
-    uint8_t* const n,
-    uint8_t* const s,
-    uint8_t* const na,
-    uint8_t* const sa,
-    uint8_t backref)
+    uint8_t* const n, uint8_t* const s, struct ghc_coder* decoder)
 {
-           *n = ((backref & GHC_BREF_CNT_MASK) >> GHC_BREF_CNT_RSHIFT) +
-                *na + GHC_BREF_CNT_ADD;
-           *s = (backref & GHC_BREF_OFFS_MASK) + *sa + *n;
-           *na = 0;
-           *sa = 0;
+    *n = ((decoder->compressed[decoder->pos_comp] & GHC_BREF_CNT_MASK) >>
+         GHC_BREF_CNT_RSHIFT) + decoder->na + GHC_BREF_CNT_ADD;
+    *s = (decoder->compressed[decoder->pos_comp] & GHC_BREF_OFFS_MASK) +
+         decoder->sa + *n;
 }
 
 
