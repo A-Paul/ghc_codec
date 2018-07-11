@@ -60,7 +60,7 @@ int main (void)
         for (i=0; i < ghc_suite_case_refs[suite_case].payload_len; ++i) {
             comp_val1 = ghc_suite_case_refs[suite_case].payload[i];
             comp_val2 = test_decoder.uncompressed[DICT_LEN+i];
-            if (PRINT_ALL && (comp_val1 != comp_val2)) {
+            if (PRINT_ALL || (comp_val1 != comp_val2)) {
                 printf("%03d:0x%02X:0x%02X,%c", i, comp_val1, comp_val2,
                     (((i+1) & 0x7) ? ' ' : '\n'));
             }
