@@ -52,28 +52,21 @@ static inline void set_backrefs(
 
 /*!
  * Copy literal data bytes.
+ * Limits are not validated and have to be asserted before invocation.
  * 
- * \param[inout]  target buffer.
- * \param[inout]  pos_target position index.
- * \param[inout]  pos_source position index.
- * \param[in]     source buffer.
+ * \param[inout]  decoder.
  * \param[in]     n number of copied bytes.
  */
-static inline void copy_literal(
-    uint8_t*  const target,
-    uint16_t* const pos_target,
-    uint16_t* const pos_source,
-    const uint8_t*  const source,
-    uint8_t n)
+static inline void copy_literal( struct ghc_coder* decoder, uint8_t n)
 {
     while(n) {
-        ++(*pos_source);
-        target[*pos_target] = source[*pos_source];
-        ++(*pos_target);
+        ++(decoder->pos_comp);
+        decoder->uncompressed[decoder->pos_unco] =
+            decoder->compressed[decoder->pos_comp];
+        ++(decoder->pos_unco);
         --n;
     }
 }
-
 
 /*!
  * Copy data bytes from dictionary.
