@@ -70,23 +70,23 @@ static inline void copy_literal( struct ghc_coder* decoder, uint8_t n)
 
 /*!
  * Copy data bytes from dictionary.
+ * Limits are not validated and have to be asserted before invocation.
  *
- * \param[inout]  target buffer.
- * \param[inout]  pos_target position index.
+ * \param[inout]  decoder.
  * \param[in]     n number of copied bytes.
  * \param[in]     s backreference index.
  */
 static inline void append_backreference(
-    uint8_t*  const target,
-    uint16_t* const pos_target,
-    uint8_t n,
-    uint8_t s)
+    struct ghc_coder* decoder, uint8_t n, uint8_t s)
 {
     while(n) {
-        target[*pos_target] = target[*pos_target - s];
-        ++(*pos_target);
+        decoder->uncompressed[decoder->pos_unco] =
+            decoder->uncompressed[decoder->pos_unco - s];
+        ++(decoder->pos_unco);
         --n;
     }
+    decoder->na = 0;
+    decoder->sa = 0;
 }
 
 

@@ -112,7 +112,7 @@ int ghc_decompress ( struct ghc_coder* decoder)
                    decoder->pos_unco, decoder->size_unco, s, n);
 #endif
             if ((decoder->pos_unco <= decoder->size_unco - n) && (s <= decoder->pos_unco)) {
-                append_backreference(decoder->uncompressed, &decoder->pos_unco, n, s);
+                append_backreference(decoder, n, s);
             } else {
                 clean = 0;
                 retval = -32;
@@ -120,8 +120,6 @@ int ghc_decompress ( struct ghc_coder* decoder)
             /* postconditions
              * na := sa := 0
              */
-            decoder->na = 0;
-            decoder->sa = 0;
         }
         else if ( GHC_EXT_BC == (decoder->compressed[decoder->pos_comp] & GHC_EXT_MASK)) {
             set_extensions(&decoder->na, &decoder->sa,
