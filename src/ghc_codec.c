@@ -89,7 +89,7 @@ int ghc_decompress ( struct ghc_coder* decoder)
              */
             n = (decoder->compressed[decoder->pos_comp] & GHC_ZEROS_CNT_MASK) + 2;
             if (decoder->pos_unco <= decoder->size_unco - n) {
-                append_zeros(decoder->uncompressed, &decoder->pos_unco, n);
+                append_zeros(decoder, n);
             } else {
                 clean = 0;
                 retval = -31;
