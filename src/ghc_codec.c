@@ -30,7 +30,7 @@ int ghc_decompress ( struct ghc_coder* decoder)
      */
     decoder->na = 0;        /*!< Extension value for @n. */
     decoder->sa = 0;        /*!< Extension value for @s. */
-    uint8_t n  = 0;         /*!< Number of backreference bytes.*/
+    uint8_t n  = 0;         /*!< Number of (backreference) bytes.*/
     uint8_t s  = 0;         /*!< Index of backreference start. */
 
     decoder->pos_comp = 0;
@@ -39,8 +39,7 @@ int ghc_decompress ( struct ghc_coder* decoder)
     /*
      * Goes into ghc.h later
      */
-#define GHC_COPY_CNT_MASK (0x7FU)
-#define GHC_ZEROS_CNT_MASK (0x0FU)
+#define GHC_COPY_CNT_MAX (0x60U)
 
     /*
      * Goes into ghc_codec_intern.h later
@@ -62,11 +61,15 @@ int ghc_decompress ( struct ghc_coder* decoder)
              * n < 96
              */
             n = decoder->compressed[decoder->pos_comp] & GHC_COPY_CNT_MASK;
+            /* Instead of checking array boundary override it can be done in
+             *advance. */
             if (( decoder->size_comp >= decoder->pos_comp + n + 1U) &&
-                ( decoder->size_unco >= decoder->pos_unco + n) && n < 96) {
-                // printf("X:%02i\n",decoder->compressed[decoder->pos_comp]);
-                copy_literal(decoder->uncompressed, &decoder->pos_unco,
-                             &decoder->pos_comp, decoder->compressed, n);
+                ( decoder->size_unco >= decoder->pos_unco + n) &&
+                ( n < GHC_COPY_CNT_MAX)) {
+#if DEBUG == 1
+                printf("X:%02i\n",decoder->compressed[decoder->pos_comp]);
+#endif
+                copy_literal(decoder, n);
             } else {
                 clean = 0;
                 retval = -30;
