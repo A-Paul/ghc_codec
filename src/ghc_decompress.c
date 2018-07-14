@@ -8,17 +8,6 @@
 #include "ghc_codec.h"
 #include "ghc_codec_intern.h"
 
-int ghc_compress(struct ghc_coder* encoder)
-{
-    int retval = -1;
-    (void)encoder->compressed;
-    (void)encoder->size_comp;
-    (void)encoder->uncompressed;
-    (void)encoder->size_unco;
-
-    return retval;
-}
-
 
 int ghc_decompress ( struct ghc_coder* decoder)
 {

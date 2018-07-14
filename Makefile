@@ -7,7 +7,8 @@ CFLAGS_EX = -pedantic -Wextra $(CFLAGS_DEBUG)
 CFLAGS += $(CFLAGS_CC) $(CFLAGS_INCLUDES) $(CFLAGS_EX)
 
 TARGETS = check_ghc_codec
-SOURCES_check_ghc_codec = check_ghc_codec.c src/ghc_codec.c
+SOURCES_check_ghc_codec = check_ghc_codec.c src/ghc_decompress.c \
+src/ghc_compress-stub.c
 OBJECTS_check_ghc_codec = $(SOURCES_check_ghc_codec:%.c=%.o)
 
 LDFLAGS +=
