@@ -8,17 +8,6 @@
 #include "ghc_codec.h"
 #include "ghc_codec_intern.h"
 
-int ghc_compress(struct ghc_coder* encoder)
-{
-    int retval = -1;
-    (void)encoder->compressed;
-    (void)encoder->size_comp;
-    (void)encoder->uncompressed;
-    (void)encoder->size_unco;
-
-    return retval;
-}
-
 
 int ghc_decompress ( struct ghc_coder* decoder)
 {
@@ -39,7 +28,6 @@ int ghc_decompress ( struct ghc_coder* decoder)
     /*
      * Goes into ghc.h later
      */
-#define GHC_COPY_CNT_MAX (0x60U)
 
     /*
      * Goes into ghc_codec_intern.h later
@@ -65,7 +53,7 @@ int ghc_decompress ( struct ghc_coder* decoder)
              *advance. */
             if (( decoder->size_comp >= decoder->pos_comp + n + 1U) &&
                 ( decoder->size_unco >= decoder->pos_unco + n) &&
-                ( n < GHC_COPY_CNT_MAX)) {
+                ( n < (GHC_COPY_CNT_MAX + 1))) {
 #if DEBUG == 1
                 printf("X:%02i\n",decoder->compressed[decoder->pos_comp]);
 #endif

@@ -55,15 +55,17 @@
 #define GHC_BREF_OFFS_MASK      (0x07U)    /*!< Mask for back reference offset */
 
 /*! 10010000 */
-#define GHC_STOP_BC             (0x90U)
+#define GHC_STOP_BC             (0x90U)    /*!< Token for end of compressed block */
 
 /*! 1001____ */
 
+#define GHC_COPY_CNT_MAX        (0x5FU)    /*!< Max number of copied bytes */
+
 /* At least questionable */
 #define GHC_BREF_CNT_VALUE_MIN  (0x02U)    /*!< Min value for back reference counter */
-#define GHC_BREF_CNT_VALUE_MAX  (0x11U)    /*!< Max value for back reference counter */
+#define GHC_BREF_CNT_VALUE_MAX  (0x09U)    /*!< Max value for back reference counter */
 #define GHC_BREF_OFFS_VALUE_MIN (0x02U)    /*!< Min value for back reference offset */
-#define GHC_BREF_OFFS_VALUE_MAX (0x90U)    /*!< Max value for back reference offset */
+#define GHC_BREF_OFFS_VALUE_MAX (0x10U)    /*!< Max value for back reference offset */
 
 #define GHC_DICT_PRE_LEN        (0x30U)    /*!< Predefined dictionary size */
 

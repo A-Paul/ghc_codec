@@ -9,6 +9,8 @@
 /doc/latex/
 
 # C specific files
+*.P
+*.d
 *.o
 *.out
 GPATH
