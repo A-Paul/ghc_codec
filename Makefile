@@ -7,16 +7,23 @@ CFLAGS_EX = -pedantic -Wextra $(CFLAGS_DEBUG)
 CFLAGS += $(CFLAGS_CC) $(CFLAGS_INCLUDES) $(CFLAGS_EX)
 
 TARGETS = check_ghc_codec
-SOURCES_check_ghc_codec = check_ghc_codec.c src/ghc_decompress.c \
+check_ghc_codec_SOURCES = check_ghc_codec.c src/ghc_decompress.c \
 src/ghc_compress-stub.c
-OBJECTS_check_ghc_codec = $(SOURCES_check_ghc_codec:%.c=%.o)
+check_ghc_codec_OBJECTS = $(check_ghc_codec_SOURCES:.c=.o)
 
 LDFLAGS +=
 
+.PHONY: all dep clean
+
 all: $(TARGETS)
 
-check_ghc_codec: $(OBJECTS_check_ghc_codec)
+dep:
+	$(CC) $(CFLAGS_INCLUDES) -E -MMD $(check_ghc_codec_SOURCES) > /dev/null
+
+-include *.d
+
+check_ghc_codec: $(check_ghc_codec_OBJECTS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 clean:
-	$(RM) $(TARGETS) $(OBJECTS_check_ghc_codec)
+	$(RM) $(TARGETS) $(check_ghc_codec_OBJECTS)
