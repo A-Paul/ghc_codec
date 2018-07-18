@@ -26,19 +26,13 @@ struct ghc_coder {
 };
 
 /*!
- * \param[in]    source uncompressed byte array.
- * \param[in]    sn number of elements in source.
- * \param[inout] target compressed byte array.
- * \param[inout] tn number of elements in target.
+ * \param[inout] encoder struct holding the buffers and state and meta data.
  */
 int ghc_compress (struct ghc_coder* encoder);
 
 
 /*!
- * \param[in]    source compressed bytecode.
- * \param[in]    sn number of elements in source.
- * \param[inout] target uncompressed byte array.
- * \param[inout] tn number of elements in target.
+ * \param[inout] decoder struct holding the buffers and state and meta data.
  */
 int ghc_decompress (struct ghc_coder* decoder);
 
