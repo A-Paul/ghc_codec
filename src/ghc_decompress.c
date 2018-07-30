@@ -28,7 +28,6 @@ int ghc_decompress ( struct ghc_coder* decoder)
     /*
      * Goes into ghc.h later
      */
-#define GHC_COPY_CNT_MAX (0x60U)
 
     /*
      * Goes into ghc_codec_intern.h later
@@ -54,7 +53,7 @@ int ghc_decompress ( struct ghc_coder* decoder)
              *advance. */
             if (( decoder->size_comp >= decoder->pos_comp + n + 1U) &&
                 ( decoder->size_unco >= decoder->pos_unco + n) &&
-                ( n < GHC_COPY_CNT_MAX)) {
+                ( n < (GHC_COPY_CNT_MAX + 1))) {
 #if DEBUG == 1
                 printf("X:%02i\n",decoder->compressed[decoder->pos_comp]);
 #endif
