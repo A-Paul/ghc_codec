@@ -6,24 +6,43 @@ CFLAGS_CC = -std=c11 -Wall
 CFLAGS_EX = -pedantic -Wextra $(CFLAGS_DEBUG)
 CFLAGS += $(CFLAGS_CC) $(CFLAGS_INCLUDES) $(CFLAGS_EX)
 
-TARGETS = check_ghc_codec
-check_ghc_codec_SOURCES = check_ghc_codec.c src/ghc_decompress.c \
-src/ghc_compress-stub.c
-check_ghc_codec_OBJECTS = $(check_ghc_codec_SOURCES:.c=.o)
-
 LDFLAGS +=
 
-.PHONY: all dep clean
+DEPS_DIR = .deps
+DEPS_DEBUG := $(shell mkdir ./$(DEPS_DIR) 1>/dev/null 2>&1)
+
+# Induce dependency creation into implicit "%.o: %.c" target.
+#OUTPUT_OPTION = -Wp,-MMD,$(DEPS_DIR)/$(*F).P $(OUTPUT_OPTION)
+COMPILE.c += -Wp,-MMD,$(DEPS_DIR)/$(*F).P
+
+# Choose default compressor implementation if 
+TYPE_CODER ?= stub
+
+TARGETS = test_ghc_decompress test_ghc_compress
+
+test_ghc_decompress_SOURCES := test_ghc_decompress.c src/ghc_decompress.c
+test_ghc_decompress_OBJECTS = $(test_ghc_decompress_SOURCES:.c=.o)
+
+test_ghc_compress_SOURCES := test_ghc_compress.c src/ghc_decompress.c \
+	src/ghc_compress-$(TYPE_CODER).c
+test_ghc_compress_OBJECTS = $(test_ghc_compress_SOURCES:.c=.o)
+
+.PHONY: all run-tests clean
 
 all: $(TARGETS)
 
-dep:
-	$(CC) $(CFLAGS_INCLUDES) -E -MMD $(check_ghc_codec_SOURCES) > /dev/null
+-include $(DEPS_DIR)/*.P
 
--include *.d
-
-check_ghc_codec: $(check_ghc_codec_OBJECTS)
+test_ghc_decompress: $(test_ghc_decompress_OBJECTS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
+test_ghc_compress: $(test_ghc_compress_OBJECTS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
+
+
+run-tests: $(TARGETS)
+	$(foreach TARGET, $(TARGETS), ./$(TARGET);)
+
 clean:
-	$(RM) $(TARGETS) $(check_ghc_codec_OBJECTS)
+	$(RM) $(TARGETS) $(foreach TARGET,$(TARGETS),\
+		$($(TARGET)_OBJECTS)) $(DEPS_DIR)/*.P
