@@ -12,7 +12,7 @@
             RFC_EXAMPLES_PAYLOAD_MAX % GHC_COPY_CNT_MAX + 1)
 #define RFC7400_EXAMPLES_FIRST (8U)
 
-#define PRINT_ALL (0)
+#define PRINT_ALL (1)
 
 /*! Copy content of seq to the compressed of ghcc.
  * \param[inout] ghcc struct with member compressed as target.
@@ -82,6 +82,8 @@ int main (void)
     uint32_t i;
     uint32_t num_cases = (sizeof ghc_suite_case_refs)/
                          (sizeof ghc_suite_case_refs[0]);
+
+    uint8_t min_case = 9;
     uint8_t suite_case = 0;
     uint8_t comp_val1 = 0;
     uint8_t comp_val2 = 0;
@@ -98,7 +100,7 @@ int main (void)
     test_decoder.na = 0;        /*!< Extension value for @n. */
     test_decoder.sa = 0;        /*!< Extension value for @s. */
 
-    for ( suite_case = 0; suite_case < num_cases; ++suite_case) {
+    for ( suite_case = min_case; suite_case < num_cases; ++suite_case) {
 
         /* Set metadata.
          * size_comp is sized to carry the "copy only" worst case.
