@@ -97,7 +97,7 @@ static inline uint32_t get_match_len( struct ghc_coder* encoder,
  * \param[in]  encoder
  * \param[in]  pload_idx start for temporary pload start
  */
-static inline uint32_t get_longest_match(
+static inline void get_longest_match(
     struct ghc_coder* encoder, uint16_t pload_idx,
     uint16_t* dict_idx, uint16_t* max_len)
 {
@@ -108,7 +108,7 @@ static inline uint32_t get_longest_match(
     uint16_t temp_dict_suffix_len;
     uint16_t match_max_len = encoder->size_unco - pload_idx;
 
-    for( dict_pivot = 0; dict_pivot < (pload_idx - 2); ++dict_pivot) {
+    for( dict_pivot = 0; dict_pivot <= (pload_idx - GHC_BREF_CNT_VALUE_MIN); ++dict_pivot) {
 
         temp_dict_suffix_len = pload_idx - dict_pivot;
         /* compare length is bound by either actual dict or payload suffix. */
@@ -121,54 +121,31 @@ static inline uint32_t get_longest_match(
          */
         get_match_len(
             encoder, &match_len, match_max_len, dict_pivot, pload_idx);
-#if DEBUG == 5
-        printf("gt_lo_ma pload_idx: %03d dict_pivot: %03d "
-            "match_max_len: %03d match_len: %03d max_len: %03d\n",
-            pload_idx, dict_pivot, match_max_len, match_len, *max_len);
+#if DEBUG >= 2
+        printf("%s:%d: pload_idx: %03d dict_pivot: %03d "
+            "match_max_len: %03d match_len: %03d max_len: %03d byte: 0x%02x\n",
+            __func__, __LINE__, pload_idx - 48, dict_pivot, match_max_len,
+            match_len, *max_len, encoder->uncompressed[pload_idx]);
 #endif
         if(match_len >= *max_len) { /* Prefer *same* lengths with smaller indices */
             *max_len = match_len;
             *dict_idx = dict_pivot;
         }
     }
-    return 1;
 }
 
 
-static inline void write_bref_code_0(struct ghc_coder* encoder,
-    uint16_t longest_match_len, uint16_t longest_match_offs)
-{
-    uint16_t match_len = longest_match_len - GHC_BREF_CNT_ADD;
-    uint16_t match_offs = longest_match_offs - match_len;
-    uint8_t bref_bc = //GHC_BREF_BC |
-        ((match_len & BREF_BC_LEN_MASK) << GHC_BREF_CNT_RSHIFT) |
-        ((match_offs & GHC_BREF_OFFS_MASK));
-    printf("A: %03d, B: %03d, C: %03d\n", match_len, match_offs, bref_bc);
-    /* Mask out used bits */
-    match_len &= ~BREF_BC_LEN_MASK;
-    match_offs &= ~GHC_BREF_OFFS_MASK;
-
-    uint8_t ext_len_repeat_count = match_len / EXT_BC_LEN_MASK;
-    uint8_t ext_offs_repeat_count = match_offs / EXT_BC_OFFS_MASK;
-    uint8_t ext_len_remain = match_len & EXT_BC_LEN_MASK;
-    uint8_t ext_offs_remain = match_offs & EXT_BC_OFFS_MASK;
-
-    printf("lo_ma match_len: 0x%03x match_offs: 0x%03x bref_bc: 0x%03x\n"
-            "ext_len_repeat_count: 0x%02x ext_offs_repeat_count: 0x%02x\n"
-            "ext_len_remain: 0x%02x ext_offs_remain: 0x%02x\n",
-            match_len, match_offs, bref_bc, ext_len_repeat_count, ext_offs_repeat_count,
-            ext_len_remain, ext_offs_remain);
-}
-
-static inline void write_bref_code_1(struct ghc_coder* encoder,
+static inline void write_bref_code(struct ghc_coder* encoder,
     uint16_t longest_match_len, uint16_t longest_match_offs)
 {
     uint16_t match_len = longest_match_len - GHC_BREF_CNT_ADD;
     uint16_t match_offs = longest_match_offs - longest_match_len;
     uint8_t  bref_bc = 0;
 
-    printf("Func: %s, line: %d, match_len: 0x%02X match_offs: 0x%02X longest_match_offs: 0x%02X\n",
+#if DEBUG >= 3
+    printf("%s:%d: match_len: 0x%02X match_offs: 0x%02X longest_match_offs: 0x%02X\n",
             __func__, __LINE__, match_len, match_offs, longest_match_offs);
+#endif
 
     while ((match_len & ~EXT_FULL_LEN_MASK) ||
            (match_offs & ~EXT_FULL_OFFS_MASK)) {
@@ -187,9 +164,7 @@ static inline void write_bref_code_1(struct ghc_coder* encoder,
         ++encoder->pos_comp;
     }
 
-    printf("Func: %s, line: %d, bref_bc: 0x%02X\n", __func__, __LINE__, bref_bc);
-
-    bref_bc = GHC_EXT_BC |
+    bref_bc = GHC_EXT_BC |  /* 0b101nssss */
               ((match_len & EXT_BC_LEN_MASK) << GHC_EXT_CNT_RSHIFT) |
               ((match_offs & EXT_BC_OFFS_MASK) >> GHC_EXT_OFFS_LSHIFT);
 
@@ -198,18 +173,12 @@ static inline void write_bref_code_1(struct ghc_coder* encoder,
         ++encoder->pos_comp;
     }
 
-    printf("Func: %s, line: %d, bref_bc: 0x%02X\n", __func__, __LINE__, bref_bc);
-
-    bref_bc = GHC_BREF_BC |
+    bref_bc = GHC_BREF_BC |  /* 0b11nnnkkk */
               ((match_len & BREF_BC_LEN_MASK) << GHC_BREF_CNT_RSHIFT) |
               ((match_offs & BREF_BC_OFFS_MASK) >> GHC_BREF_OFFS_LSHIFT);
 
-    if (bref_bc != GHC_BREF_BC) {
-        encoder->compressed[encoder->pos_comp] = bref_bc;
-        ++encoder->pos_comp;
-    }
-
-    printf("Func: %s, line: %d, bref_bc: 0x%02X\n", __func__, __LINE__, bref_bc);
+    encoder->compressed[encoder->pos_comp] = bref_bc;
+    ++encoder->pos_comp;
 }
 
 /*
@@ -232,7 +201,6 @@ int ghc_compress(struct ghc_coder* encoder)
     uint16_t pload_provision_idx = encoder->pos_unco;
 
     clean = 1;
-    SHOW_GHC_CODER(encoder);
 
     while (clean && comp_not_full(encoder) && payload_not_empty(encoder))
     {
@@ -244,15 +212,15 @@ int ghc_compress(struct ghc_coder* encoder)
         get_longest_match(encoder, pload_provision_idx,
             &longest_match_idx, &longest_match_len);
 
-#if DEBUG == 3
-        printf("lo_ma longest_match_idx: 0x%03x longest_match_len: 0x%03x zero_len: 0x%03x\n",
-            longest_match_idx, longest_match_len, zero_seq_len);
+#if DEBUG >= 2
+        printf("%s:%d: longest_match |_idx:0x%03x|_len:0x%03x|zero_len:0x%03x|\n",
+            __func__, __LINE__, longest_match_idx, longest_match_len, zero_seq_len);
+        printf("%s:%d: longest_match |comp:0x%03x|plod:0x%03x|provision:0x%03x|\n",
+            __func__, __LINE__, encoder->pos_comp, encoder->pos_unco, pload_provision_idx);
 #endif
 
         if (1U < zero_seq_len || 1U < longest_match_len) {
             /* copy_provision(encoder, pload_provision_idx); */
-            printf("Func: %s, line: %d, zero_seq_len: 0x%02X longest_match_len: 0x%02X\n",
-                    __func__, __LINE__, zero_seq_len, longest_match_len);
             copy_seq_len = pload_provision_idx - encoder->pos_unco;
             if (copy_seq_len) {
                 encoder->compressed[encoder->pos_comp] = GHC_COPY_BC |
@@ -269,10 +237,9 @@ int ghc_compress(struct ghc_coder* encoder)
 
             if(longest_match_len > zero_seq_len) {
 
-                write_bref_code_1(encoder, longest_match_len,
+                /* Compose and set bytecodes */
+                write_bref_code(encoder, longest_match_len,
                     pload_provision_idx - longest_match_idx);
-
-                //break;
 
                 /* Update encoder "state". */
                 encoder->pos_unco += longest_match_len;
@@ -290,8 +257,6 @@ int ghc_compress(struct ghc_coder* encoder)
         else {
             ++pload_provision_idx;
         }
-        puts("...\n");
-        SHOW_GHC_CODER(encoder);
         clean = 1;
     }
     return retval;
