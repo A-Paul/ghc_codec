@@ -1,4 +1,4 @@
-#if DEBUG == 1
+#if DEBUG > 0
 #include <stdio.h>
 #endif
 #include <stdint.h>
@@ -54,7 +54,7 @@ int ghc_decompress ( struct ghc_coder* decoder)
             if (( decoder->size_comp >= decoder->pos_comp + n + 1U) &&
                 ( decoder->size_unco >= decoder->pos_unco + n) &&
                 ( n < (GHC_COPY_CNT_MAX + 1))) {
-#if DEBUG == 1
+#if DEBUG >= 2
                 printf("X:%02i\n",decoder->compressed[decoder->pos_comp]);
 #endif
                 copy_literal(decoder, n);
@@ -95,7 +95,7 @@ int ghc_decompress ( struct ghc_coder* decoder)
              * maining free buffer)
              * s  <= pos_tartget (backref index inside dictionary)
              */
-#if DEBUG == 1
+#if DEBUG >= 1
             printf("pt:%05d:decoder->size_unco:%05lu:s:%05u:n:%05u\n",
                    decoder->pos_unco, decoder->size_unco, s, n);
 #endif
@@ -125,7 +125,7 @@ int ghc_decompress ( struct ghc_coder* decoder)
          * Assertions: 0 < decoder->size_comp - decoder->pos_comp
          * decoder->pos_comp
          */
-#if DEBUG == 1
+#if DEBUG >= 1
         printf("ps:%05d:pt:%05d:decoder->size_unco:%03lu:s:%03u:n:%03u\n",
                decoder->pos_comp, decoder->pos_unco, decoder->size_unco, s, n);
 #endif

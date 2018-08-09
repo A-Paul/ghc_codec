@@ -1,0 +1,1 @@
+../test_ghc_compress.c

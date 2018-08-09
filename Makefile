@@ -1,7 +1,7 @@
 CC = $(shell which gcc)
 
 CFLAGS_INCLUDES = -I./include
-CFLAGS_DEBUG = -g -DDEBUG=3
+CFLAGS_DEBUG = -g -DDEBUG=0
 CFLAGS_CC = -std=c11 -Wall
 CFLAGS_EX = -pedantic -Wextra $(CFLAGS_DEBUG)
 CFLAGS += $(CFLAGS_CC) $(CFLAGS_INCLUDES) $(CFLAGS_EX)
