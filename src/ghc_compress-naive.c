@@ -219,13 +219,14 @@ int ghc_compress(struct ghc_coder* encoder)
             __func__, __LINE__, encoder->pos_comp, encoder->pos_unco, pload_provision_idx);
 #endif
 
-        if (1U < zero_seq_len || 1U < longest_match_len) {
+        if (1U < zero_seq_len || 1U < longest_match_len ||
+            copy_seq_len == GHC_COPY_CNT_MAX || pload_provision_idx == encoder->size_unco) {
             /* copy_provision(encoder, pload_provision_idx); */
-            copy_seq_len = pload_provision_idx - encoder->pos_unco;
             if (copy_seq_len) {
-                encoder->compressed[encoder->pos_comp] = GHC_COPY_BC |
-                    (copy_seq_len & GHC_COPY_CNT_MASK);
+                encoder->compressed[encoder->pos_comp] =
+                    GHC_COPY_BC | (copy_seq_len & GHC_COPY_CNT_MASK);
                 ++(encoder->pos_comp);
+
                 while (copy_seq_len) {
                     encoder->compressed[encoder->pos_comp] =
                         encoder->uncompressed[encoder->pos_unco];
@@ -234,7 +235,9 @@ int ghc_compress(struct ghc_coder* encoder)
                     --copy_seq_len;
                 }
             }
+        }
 
+        if (1U < zero_seq_len || 1U < longest_match_len) {
             if(longest_match_len > zero_seq_len) {
 
                 /* Compose and set bytecodes */
@@ -256,8 +259,8 @@ int ghc_compress(struct ghc_coder* encoder)
         }
         else {
             ++pload_provision_idx;
+            copy_seq_len = pload_provision_idx - encoder->pos_unco;
         }
-        clean = 1;
     }
     return retval;
 }
