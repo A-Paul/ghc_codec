@@ -4,20 +4,20 @@
  * - COPY:
  *   > appending bytes to the reconstituted payload that are literally
  *   > given with the instruction in the compressed data
- * 
+ *
  * - ZEROS:
  *   > appending a given number of zero bytes to the reconstituted
  *   > payload
- * 
+ *
  * - EXT:
  *   > appending bytes to the reconstituted payload by copying a
  *   > contiguous sequence from the payload being reconstituted
  *   > ("backreferencing")
- * 
+ *
  * - BREF:
  *   > an ancillary instruction for setting up parameters for the
  *   > backreferencing instruction in "decompression variables"
- * 
+ *
  * - STOP:
  *   > a stop code (optional; see Section 3.2)
  */
@@ -71,4 +71,16 @@
 
 #define GHC_DICT_PRE_STATIC     0x16, 0xfe, 0xfd, 0x17, 0xfe, 0xfd, 0x00, 0x01,\
                                 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00
+
+
+/* GHC definitions for IPHC-NHC byte, RFC7400 Section 3.1-3.2 */
+#define NHC_GHC_UDP_FORMAT          (0xD0U)    /*!< NHC format prefix for GHC UDP */
+#define NHC_GHC_UDP_FMTMSK          (0xF8U)    /*!< NHC format mask for GHC UDP */
+#define NHC_GHC_ICMP_FORMAT         (0xDFU)    /*!< NHC format prefix for GHC ICMPv6 */
+#define NHC_GHC_ICMP_FMTMSK         (0xFFU)    /*!< NHC format mask for GHC ICMPv6 */
+#define NHC_GHC_EXTHD_FORMAT        (0xB0U)    /*!< NHC format prefix for GHC extension headers */
+#define NHC_GHC_EXTHD_FMTMSK        (0xF0U)    /*!< NHC format mask for GHC extension headers */
+#define NHC_GHC_EXTHD_EID_MASK      (0x0EU)    /*!< EID mask for GHC extension headers */
+#define NHC_GHC_EXTHD_EID_RSHIFT    (0x01U)    /*!< EID shift for GHC extension headers */
+#define NHC_GHC_EXTHD_NH_MASK       (0x01U)    /*!< NH mask for GHC extension headers */
 
