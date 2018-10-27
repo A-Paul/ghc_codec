@@ -8,7 +8,7 @@ struct ghc_case_ref const ghc_case_08 = {
     6,
     ghc_expl_08_plod,
     ghc_expl_08_dict,
-    ghc_expl_08_comp
+    ghc_expl_08_byco
 };
 
 
@@ -19,7 +19,7 @@ struct ghc_case_ref ghc_case_09 = {
     52,
     ghc_expl_09_plod,
     ghc_expl_09_dict,
-    ghc_expl_09_comp
+    ghc_expl_09_byco
 };
 
 struct ghc_case_ref ghc_case_10 = {
@@ -29,7 +29,7 @@ struct ghc_case_ref ghc_case_10 = {
     27,
     ghc_expl_10_plod,
     ghc_expl_10_dict,
-    ghc_expl_10_comp
+    ghc_expl_10_byco
 };
 
 struct ghc_case_ref ghc_case_11 = {
@@ -39,7 +39,7 @@ struct ghc_case_ref ghc_case_11 = {
     26,
     ghc_expl_11_plod,
     ghc_expl_11_dict,
-    ghc_expl_11_comp
+    ghc_expl_11_byco
 };
 
 struct ghc_case_ref ghc_case_12 = {
@@ -49,7 +49,7 @@ struct ghc_case_ref ghc_case_12 = {
     27,
     ghc_expl_12_plod,
     ghc_expl_12_dict,
-    ghc_expl_12_comp
+    ghc_expl_12_byco
 };
 
 struct ghc_case_ref ghc_case_13 = {
@@ -59,7 +59,7 @@ struct ghc_case_ref ghc_case_13 = {
     12,
     ghc_expl_13_plod,
     ghc_expl_13_dict,
-    ghc_expl_13_comp
+    ghc_expl_13_byco
 };
 
 struct ghc_case_ref ghc_case_14 = {
@@ -69,7 +69,7 @@ struct ghc_case_ref ghc_case_14 = {
     58,
     ghc_expl_14_plod,
     ghc_expl_14_dict,
-    ghc_expl_14_comp
+    ghc_expl_14_byco
 };
 
 struct ghc_case_ref ghc_case_15 = {
@@ -79,7 +79,7 @@ struct ghc_case_ref ghc_case_15 = {
     27,
     ghc_expl_15_plod,
     ghc_expl_15_dict,
-    ghc_expl_15_comp
+    ghc_expl_15_byco
 };
 
 struct ghc_case_ref ghc_case_16 = {
@@ -89,7 +89,7 @@ struct ghc_case_ref ghc_case_16 = {
     22,
     ghc_expl_16_plod,
     ghc_expl_16_dict,
-    ghc_expl_16_comp
+    ghc_expl_16_byco
 };
 
 struct ghc_case_ref ghc_case_17 = {
@@ -99,7 +99,7 @@ struct ghc_case_ref ghc_case_17 = {
     53,
     ghc_expl_17_plod,
     ghc_expl_17_dict,
-    ghc_expl_17_comp
+    ghc_expl_17_byco
 };
 
 /*
