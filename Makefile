@@ -18,14 +18,14 @@ COMPILE.c += -Wp,-MMD,$(DEPS_DIR)/$(*F).P
 # Choose default compressor implementation if
 TYPE_CODER ?= naive
 
-TARGETS = test_ghc_decompress test_ghc_compress
+TARGETS = test_ghc_decode test_ghc_encode
 
-test_ghc_decompress_SOURCES := test_ghc_decompress.c src/ghc_decompress.c
-test_ghc_decompress_OBJECTS = $(test_ghc_decompress_SOURCES:.c=.o)
+test_ghc_decode_SOURCES := test_ghc_decode.c src/ghc_decode.c
+test_ghc_decode_OBJECTS = $(test_ghc_decode_SOURCES:.c=.o)
 
-test_ghc_compress_SOURCES := test_ghc_compress.c src/ghc_decompress.c \
-	src/ghc_compress-$(TYPE_CODER).c
-test_ghc_compress_OBJECTS = $(test_ghc_compress_SOURCES:.c=.o)
+test_ghc_encode_SOURCES := test_ghc_encode.c src/ghc_decode.c \
+	src/ghc_encode-$(TYPE_CODER).c
+test_ghc_encode_OBJECTS = $(test_ghc_encode_SOURCES:.c=.o)
 
 .PHONY: all run-tests clean
 
@@ -33,10 +33,10 @@ all: $(TARGETS)
 
 -include $(DEPS_DIR)/*.P
 
-test_ghc_decompress: $(test_ghc_decompress_OBJECTS)
+test_ghc_decode: $(test_ghc_decode_OBJECTS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
-test_ghc_compress: $(test_ghc_compress_OBJECTS)
+test_ghc_encode: $(test_ghc_encode_OBJECTS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 

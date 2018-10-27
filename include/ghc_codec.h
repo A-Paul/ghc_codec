@@ -28,12 +28,12 @@ struct ghc_coder {
 /*!
  * \param[inout] encoder struct holding the buffers and state and meta data.
  */
-int ghc_compress (struct ghc_coder* encoder);
+int ghc_encode (struct ghc_coder* encoder);
 
 
 /*!
  * \param[inout] decoder struct holding the buffers and state and meta data.
  */
-int ghc_decompress (struct ghc_coder* decoder);
+int ghc_decode (struct ghc_coder* decoder);
 
 #endif /* GHC_CODEC_H */

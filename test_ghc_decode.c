@@ -47,14 +47,14 @@ int main (void)
             ghc_suite_case_refs[suite_case].payload_len;
 
         printf("Check decoding of RFC7400 example %02i:\n"
-               "ghc_decompress(ghc_suite_case_refs[%02i])\n",
+               "ghc_decode(ghc_suite_case_refs[%02i])\n",
                RFC7400_EXAMPLES_FIRST + suite_case, suite_case);
         /*
-        printf("calling ghc_decompress(0x%p,%d,0x%p,%d)\n\n",
+        printf("calling ghc_decode(0x%p,%d,0x%p,%d)\n\n",
             test_decoder.compressed, test_decoder.size_comp,
             test_decoder.uncompressed, test_decoder.size_unco);
         */
-        result = ghc_decompress(&test_decoder);
+        result = ghc_decode(&test_decoder);
         printf("\nreturned with %03i\n", result);
 
         for (i=0; i < ghc_suite_case_refs[suite_case].payload_len; ++i) {

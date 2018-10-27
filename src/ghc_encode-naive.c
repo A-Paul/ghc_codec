@@ -185,7 +185,7 @@ static inline void write_bref_code(struct ghc_coder* encoder,
  * encoder.pos_unco points at the first uncompressed entry
  * encoder.pos_comp points at the first uncompressed entry
  */
-int ghc_compress(struct ghc_coder* encoder)
+int ghc_encode(struct ghc_coder* encoder)
 {
     int32_t retval = -1;
     int32_t clean  = 0;

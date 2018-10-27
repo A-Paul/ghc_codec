@@ -9,7 +9,7 @@
 #include "ghc_codec_intern.h"
 
 
-int ghc_decompress ( struct ghc_coder* decoder)
+int ghc_decode ( struct ghc_coder* decoder)
 {
     int retval = -1;
     int clean  = 0;

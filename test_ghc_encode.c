@@ -122,11 +122,11 @@ int main (void)
         ghcc_set_val_compressed(&test_decoder, 0);
 
         printf("Check compressiing of RFC7400 example %02"PRIu8":\n"
-               "ghc_compress(ghc_suite_case_refs[%02"PRIu8"])\n"
+               "ghc_encode(ghc_suite_case_refs[%02"PRIu8"])\n"
                "[size_comp:%03u],[size_unco:%03u]\n",
                RFC7400_EXAMPLES_FIRST + suite_case, suite_case,
                test_decoder.size_comp, test_decoder.size_unco - GHC_DICT_PRE_LEN);
-        result = ghc_compress(&test_decoder);
+        result = ghc_encode(&test_decoder);
         printf("\nreturned with %03"PRId32"\n", result);
         //SHOW_GHC_CODER((&test_decoder));
 
@@ -153,9 +153,9 @@ int main (void)
         ghcc_set_val_uncompressed(&test_decoder, 0);
 
         printf("Check decompressiing of RFC7400 example %02i:\n"
-               "ghc_decompress(ghc_suite_case_refs[%02i])\n",
+               "ghc_decode(ghc_suite_case_refs[%02i])\n",
                RFC7400_EXAMPLES_FIRST + suite_case, suite_case);
-        result = ghc_decompress(&test_decoder);
+        result = ghc_decode(&test_decoder);
         printf("\nreturned with %03"PRId32"\n", result);
         //SHOW_GHC_CODER((&test_decoder));
 
