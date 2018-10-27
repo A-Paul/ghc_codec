@@ -25,7 +25,7 @@ int main (void)
     uint8_t comp_val2 = 0;
 
     uint8_t test_plod[GHC_DICT_PRE_LEN + RFC_EXAMPLES_PAYLOAD_MAX] = { 0 };
-    uint8_t test_comp[RFC_EXAMPLES_COMPRESSED_MAX] = { 0 };
+    uint8_t test_enco[RFC_EXAMPLES_COMPRESSED_MAX] = { 0 };
 
     struct ghc_codec test_decoder;
 
@@ -36,14 +36,14 @@ int main (void)
         }
 
         for (i=0; i < ghc_suite_case_refs[suite_case].compressed_len; ++i) {
-            test_comp[i] = ghc_suite_case_refs[suite_case].compressed[i];
+            test_enco[i] = ghc_suite_case_refs[suite_case].compressed[i];
         }
 
         test_decoder.uncompressed = test_plod;
-        test_decoder.compressed = test_comp;
+        test_decoder.compressed = test_enco;
 
-        test_decoder.size_comp = ghc_suite_case_refs[suite_case].compressed_len;
-        test_decoder.size_unco = ghc_suite_case_refs[suite_case].dictionary_len +
+        test_decoder.size_enco = ghc_suite_case_refs[suite_case].compressed_len;
+        test_decoder.size_deco = ghc_suite_case_refs[suite_case].dictionary_len +
             ghc_suite_case_refs[suite_case].payload_len;
 
         printf("Check decoding of RFC7400 example %02i:\n"
@@ -51,8 +51,8 @@ int main (void)
                RFC7400_EXAMPLES_FIRST + suite_case, suite_case);
         /*
         printf("calling ghc_decode(0x%p,%d,0x%p,%d)\n\n",
-            test_decoder.compressed, test_decoder.size_comp,
-            test_decoder.uncompressed, test_decoder.size_unco);
+            test_decoder.compressed, test_decoder.size_enco,
+            test_decoder.uncompressed, test_decoder.size_deco);
         */
         result = ghc_decode(&test_decoder);
         printf("\nreturned with %03i\n", result);

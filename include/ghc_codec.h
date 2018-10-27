@@ -4,9 +4,9 @@
 #include "stdint.h"
 
 
-#define SHOW_GHC_CODER(x) printf( "size_unco:%03lu,size_comp:%03lu,pos_unco:%03u,"\
-    "pos_comp:%03u, ns:%03u, sa:%03u\n",\
-    x->size_unco, x->size_comp, x->pos_unco, x->pos_comp, x->na, x->sa )
+#define SHOW_GHC_CODER(x) printf( "size_deco:%03lu,size_enco:%03lu,pos_deco:%03u,"\
+    "pos_enco:%03u, ns:%03u, sa:%03u\n",\
+    x->size_deco, x->size_enco, x->pos_deco, x->pos_enco, x->na, x->sa )
 
 /*
  * Draft for one/two struct(s) carrying the buffers and meta data
@@ -17,10 +17,10 @@ struct ghc_codec {
   /* uint32_t status; */       /*  */
   uint8_t* uncompressed;       /* source */
   uint8_t* compressed;         /* target */
-  size_t   size_unco;	       /*  */
-  size_t   size_comp;	       /*  */
-  uint16_t pos_unco;	       /*  */
-  uint16_t pos_comp;	       /*  */
+  size_t   size_deco;	       /*  */
+  size_t   size_enco;	       /*  */
+  uint16_t pos_deco;	       /*  */
+  uint16_t pos_enco;	       /*  */
   uint8_t  na;		       /*  */
   uint8_t  sa;		       /*  */
 };
