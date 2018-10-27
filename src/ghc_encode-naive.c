@@ -53,7 +53,7 @@ static inline uint32_t get_zeros_len(
     }
 
     for (i = 0; i < max_len; ++i) {
-        if(0 != encoder->uncompressed[pos_plod + i]) {
+        if(0 != encoder->decoded[pos_plod + i]) {
             break;
         }
         else {
@@ -77,8 +77,8 @@ static inline uint32_t get_match_len( struct ghc_codec* encoder,
     uint32_t i = 0;
     *match_len = 0;
     for (i = 0; i < max_len; ++i) {
-        if(encoder->uncompressed[pos_dict + i] !=
-           encoder->uncompressed[pos_plod + i]) {
+        if(encoder->decoded[pos_dict + i] !=
+           encoder->decoded[pos_plod + i]) {
                break;
         }
         else {
@@ -125,7 +125,7 @@ static inline void get_longest_match(
         printf("%s:%d: pload_idx: %03d dict_pivot: %03d "
             "match_max_len: %03d match_len: %03d max_len: %03d byte: 0x%02x\n",
             __func__, __LINE__, pload_idx - 48, dict_pivot, match_max_len,
-            match_len, *max_len, encoder->uncompressed[pload_idx]);
+            match_len, *max_len, encoder->decoded[pload_idx]);
 #endif
         if(match_len >= *max_len) { /* Prefer *same* lengths with smaller indices */
             *max_len = match_len;
@@ -160,7 +160,7 @@ static inline void write_bref_code(struct ghc_codec* encoder,
             match_offs -= EXT_FULL_OFFS_MASK + 1;
             bref_bc |= GHC_EXT_OFFS_MASK; /* 0b101n1111 */
         }
-        encoder->compressed[encoder->pos_enco] = bref_bc;
+        encoder->encoded[encoder->pos_enco] = bref_bc;
         ++encoder->pos_enco;
     }
 
@@ -169,7 +169,7 @@ static inline void write_bref_code(struct ghc_codec* encoder,
               ((match_offs & EXT_BC_OFFS_MASK) >> GHC_EXT_OFFS_LSHIFT);
 
     if (bref_bc != GHC_EXT_BC) {
-        encoder->compressed[encoder->pos_enco] = bref_bc;
+        encoder->encoded[encoder->pos_enco] = bref_bc;
         ++encoder->pos_enco;
     }
 
@@ -177,13 +177,13 @@ static inline void write_bref_code(struct ghc_codec* encoder,
               ((match_len & BREF_BC_LEN_MASK) << GHC_BREF_CNT_RSHIFT) |
               ((match_offs & BREF_BC_OFFS_MASK) >> GHC_BREF_OFFS_LSHIFT);
 
-    encoder->compressed[encoder->pos_enco] = bref_bc;
+    encoder->encoded[encoder->pos_enco] = bref_bc;
     ++encoder->pos_enco;
 }
 
 /*
- * encoder.pos_deco points at the first uncompressed entry
- * encoder.pos_enco points at the first uncompressed entry
+ * encoder.pos_deco points at the first decoded entry
+ * encoder.pos_enco points at the first decoded entry
  */
 int ghc_encode(struct ghc_codec* encoder)
 {
@@ -223,13 +223,13 @@ int ghc_encode(struct ghc_codec* encoder)
             copy_seq_len == GHC_COPY_CNT_MAX || pload_provision_idx == encoder->size_deco) {
             /* copy_provision(encoder, pload_provision_idx); */
             if (copy_seq_len) {
-                encoder->compressed[encoder->pos_enco] =
+                encoder->encoded[encoder->pos_enco] =
                     GHC_COPY_BC | (copy_seq_len & GHC_COPY_CNT_MASK);
                 ++(encoder->pos_enco);
 
                 while (copy_seq_len) {
-                    encoder->compressed[encoder->pos_enco] =
-                        encoder->uncompressed[encoder->pos_deco];
+                    encoder->encoded[encoder->pos_enco] =
+                        encoder->decoded[encoder->pos_deco];
                     ++(encoder->pos_enco);
                     ++(encoder->pos_deco);
                     --copy_seq_len;
@@ -249,7 +249,7 @@ int ghc_encode(struct ghc_codec* encoder)
             }
             else {
                 /* Compose and set bytecode */
-                encoder->compressed[encoder->pos_enco] =
+                encoder->encoded[encoder->pos_enco] =
                 (GHC_ZEROS_BC | (zero_seq_len - GHC_ZEROS_CNT_MIN));
                 /* Update encoder "state". */
                 encoder->pos_enco += 1;

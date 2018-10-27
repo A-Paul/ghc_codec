@@ -35,27 +35,27 @@ int ghc_decode ( struct ghc_codec* decoder)
 
 
 
-    if ( NULL != decoder->compressed || NULL != decoder->uncompressed) {
+    if ( NULL != decoder->encoded || NULL != decoder->decoded) {
         clean = 1;
     }
 
     while (clean) {
 
-        if ( GHC_COPY_BC == (decoder->compressed[decoder->pos_enco] & GHC_COPY_MASK)) {
+        if ( GHC_COPY_BC == (decoder->encoded[decoder->pos_enco] & GHC_COPY_MASK)) {
             /*
              * Assertions: preconditions
              * decoder->size_enco >= decoder->pos_enco + n + 1 (command byte)
              * decoder->size_deco >= decoder->pos_deco + n
              * n < 96
              */
-            n = decoder->compressed[decoder->pos_enco] & GHC_COPY_CNT_MASK;
+            n = decoder->encoded[decoder->pos_enco] & GHC_COPY_CNT_MASK;
             /* Instead of checking array boundary override it can be done in
              *advance. */
             if (( decoder->size_enco >= decoder->pos_enco + n + 1U) &&
                 ( decoder->size_deco >= decoder->pos_deco + n) &&
                 ( n < (GHC_COPY_CNT_MAX + 1))) {
 #if DEBUG >= 2
-                printf("X:%02i\n",decoder->compressed[decoder->pos_enco]);
+                printf("X:%02i\n",decoder->encoded[decoder->pos_enco]);
 #endif
                 copy_literal(decoder, n);
             } else {
@@ -69,13 +69,13 @@ int ghc_decode ( struct ghc_codec* decoder)
              * decoder->pos_deco += n
              */
         }
-        else if ( GHC_ZEROS_BC == (decoder->compressed[decoder->pos_enco] & GHC_ZEROS_MASK)) {
+        else if ( GHC_ZEROS_BC == (decoder->encoded[decoder->pos_enco] & GHC_ZEROS_MASK)) {
             /*
              * Assertions: preconditions
              * decoder->size_enco >= decoder->pos_enco + 1 (command byte)
              * decoder->size_deco >= decoder->pos_deco + n
              */
-            n = (decoder->compressed[decoder->pos_enco] & GHC_ZEROS_CNT_MASK) + 2;
+            n = (decoder->encoded[decoder->pos_enco] & GHC_ZEROS_CNT_MASK) + 2;
             if (decoder->pos_deco <= decoder->size_deco - n) {
                 append_zeros(decoder, n);
             } else {
@@ -87,7 +87,7 @@ int ghc_decode ( struct ghc_codec* decoder)
              * decoder->pos_deco += n
              */
         }
-        else if ( GHC_BREF_BC == (decoder->compressed[decoder->pos_enco] & GHC_BREF_MASK)) {
+        else if ( GHC_BREF_BC == (decoder->encoded[decoder->pos_enco] & GHC_BREF_MASK)) {
             set_backrefs(&n, &s, decoder);
             /*
              * Assertions: preconditions
@@ -109,10 +109,10 @@ int ghc_decode ( struct ghc_codec* decoder)
              * na := sa := 0
              */
         }
-        else if ( GHC_EXT_BC == (decoder->compressed[decoder->pos_enco] & GHC_EXT_MASK)) {
+        else if ( GHC_EXT_BC == (decoder->encoded[decoder->pos_enco] & GHC_EXT_MASK)) {
             set_extensions(decoder);
         }
-        else if ( GHC_STOP_BC == decoder->compressed[decoder->pos_enco]) {
+        else if ( GHC_STOP_BC == decoder->encoded[decoder->pos_enco]) {
             /*
              * Assertions: NN
              */

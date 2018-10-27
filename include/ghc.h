@@ -3,7 +3,7 @@
  *
  * - COPY:
  *   > appending bytes to the reconstituted payload that are literally
- *   > given with the instruction in the compressed data
+ *   > given with the instruction in the encoded data
  *
  * - ZEROS:
  *   > appending a given number of zero bytes to the reconstituted
@@ -55,7 +55,7 @@
 #define GHC_BREF_OFFS_MASK      (0x07U)    /*!< Mask for back reference offset */
 
 /*! 10010000 */
-#define GHC_STOP_BC             (0x90U)    /*!< Token for end of compressed block */
+#define GHC_STOP_BC             (0x90U)    /*!< Token for end of encoded block */
 
 /*! 1001____ */
 

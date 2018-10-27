@@ -6,12 +6,12 @@
 
 /*!
  * rfc7400 test/example case.
- * 
+ *
  * Reference data collection contains pointers to byte arrays (uint8_t*)
  * with the data for:
  * - payload Reference for source of a compression, target of a decompression.
  * - dictionary Pre filled lookup buffer.
- * - compressed Reference for target of a compression, source of a decompression.
+ * - encoded Reference for target of a compression, source of a decompression.
  */
 struct ghc_case_ref {
     /*! @{ \name Array size data.
@@ -19,12 +19,12 @@ struct ghc_case_ref {
      */
     size_t   payload_len;       /*!< #payload array size */
     size_t   dictionary_len;    /*!< #dictionary array size */
-    size_t   compressed_len;    /*!< #compressed array size */
+    size_t   encoded_len;       /*!< #encoded array size */
     /*! @} */
     /*! @{ \name Test data array references. */
-    uint8_t* payload;           /*!< Uncompressed header payload */
+    uint8_t* payload;           /*!< Unencoded header payload */
     uint8_t* dictionary;        /*!< Predefined lookup buffer */
-    uint8_t* compressed;        /*!< Compressed #payload. */
+    uint8_t* encoded;           /*!< Compressed #payload. */
     /*! @} */
 };
 

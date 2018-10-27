@@ -1,1 +1,1 @@
-../test_ghc_compress.c
+../test_ghc_encode.c

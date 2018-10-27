@@ -15,8 +15,8 @@
  */
 struct ghc_codec {
   /* uint32_t status; */       /*  */
-  uint8_t* uncompressed;       /* source */
-  uint8_t* compressed;         /* target */
+  uint8_t* decoded;       /* source */
+  uint8_t* encoded;         /* target */
   size_t   size_deco;	       /*  */
   size_t   size_enco;	       /*  */
   uint16_t pos_deco;	       /*  */

@@ -12,9 +12,9 @@
  */
 static inline void set_extensions(struct ghc_codec* decoder)
 {
-    decoder->na = (decoder->compressed[decoder->pos_enco] &
+    decoder->na = (decoder->encoded[decoder->pos_enco] &
                   GHC_EXT_CNT_MASK)  >> GHC_EXT_CNT_RSHIFT;
-    decoder->sa = (decoder->compressed[decoder->pos_enco] &
+    decoder->sa = (decoder->encoded[decoder->pos_enco] &
                   GHC_EXT_OFFS_MASK) << GHC_EXT_OFFS_LSHIFT;
 }
 
@@ -34,9 +34,9 @@ static inline void set_extensions(struct ghc_codec* decoder)
 static inline void set_backrefs(
     uint8_t* const n, uint8_t* const s, struct ghc_codec* decoder)
 {
-    *n = ((decoder->compressed[decoder->pos_enco] & GHC_BREF_CNT_MASK) >>
+    *n = ((decoder->encoded[decoder->pos_enco] & GHC_BREF_CNT_MASK) >>
          GHC_BREF_CNT_RSHIFT) + decoder->na + GHC_BREF_CNT_ADD;
-    *s = (decoder->compressed[decoder->pos_enco] & GHC_BREF_OFFS_MASK) +
+    *s = (decoder->encoded[decoder->pos_enco] & GHC_BREF_OFFS_MASK) +
          decoder->sa + *n;
 }
 
@@ -52,8 +52,8 @@ static inline void copy_literal( struct ghc_codec* decoder, uint8_t n)
 {
     while(n) {
         ++(decoder->pos_enco);
-        decoder->uncompressed[decoder->pos_deco] =
-            decoder->compressed[decoder->pos_enco];
+        decoder->decoded[decoder->pos_deco] =
+            decoder->encoded[decoder->pos_enco];
         ++(decoder->pos_deco);
         --n;
     }
@@ -71,8 +71,8 @@ static inline void append_backreference(
     struct ghc_codec* decoder, uint8_t n, uint8_t s)
 {
     while(n) {
-        decoder->uncompressed[decoder->pos_deco] =
-            decoder->uncompressed[decoder->pos_deco - s];
+        decoder->decoded[decoder->pos_deco] =
+            decoder->decoded[decoder->pos_deco - s];
         ++(decoder->pos_deco);
         --n;
     }
@@ -91,7 +91,7 @@ static inline void append_backreference(
 static inline void append_zeros(struct ghc_codec* decoder, uint8_t n)
 {
     while(n) {
-        decoder->uncompressed[decoder->pos_deco] = 0x0U;
+        decoder->decoded[decoder->pos_deco] = 0x0U;
         ++(decoder->pos_deco);
         --n;
     }

@@ -15,63 +15,63 @@
 
 #define PRINT_ALL (1)
 
-/*! Copy content of seq to the compressed of ghcc.
- * \param[inout] ghcc struct with member compressed as target.
+/*! Copy content of seq to the encoded of ghcc.
+ * \param[inout] ghcc struct with member encoded as target.
  * \param[in]    seq array which is copied
  */
 static inline int32_t ghcc_set_seq_encoressed(struct ghc_codec* ghcc, uint8_t* seq) {
     uint32_t i;
     for (i = 0; i < ghcc->size_enco; ++i) {
-            ghcc->compressed[i] = seq[i];
+            ghcc->encoded[i] = seq[i];
     }
     return i;
 }
 
 /*! Copy content of seq to the payload of ghcc.
- * \param[inout] ghcc struct with member uncompressed as target.
+ * \param[inout] ghcc struct with member decoded as target.
  * \param[in]    seq array which is copied
  */
-static inline int32_t ghcc_set_seq_decompressed(struct ghc_codec* ghcc, uint8_t* seq) {
+static inline int32_t ghcc_set_seq_decoded(struct ghc_codec* ghcc, uint8_t* seq) {
     uint32_t i = 0;
     uint32_t j = 0;
     for (i = GHC_DICT_PRE_LEN, j = 0; i < ghcc->size_deco; ++i, ++j) {
-            ghcc->uncompressed[i] = seq[j];
+            ghcc->decoded[i] = seq[j];
     }
     return i;
 }
 
 /*! Copy 48 bytes from seq to the predefined dictionary of ghcc.
- * \param[inout] ghcc struct with member uncompressed as target.
+ * \param[inout] ghcc struct with member decoded as target.
  * \param[in]    seq array which is copied
  */
 static inline int32_t ghcc_set_seq_dict_pre(struct ghc_codec* ghcc, uint8_t* seq) {
     uint32_t i;
     for (i = 0; i < GHC_DICT_PRE_LEN; ++i) {
-            ghcc->uncompressed[i] = seq[i];
+            ghcc->decoded[i] = seq[i];
     }
     return i;
 }
 
-/*! Set all elements of ghcc's compressed to value of val.
- * \param[inout] ghcc struct with member uncompressed as target.
+/*! Set all elements of ghcc's encoded to value of val.
+ * \param[inout] ghcc struct with member decoded as target.
  * \param[in]    val value to be set
  */
 static inline int32_t ghcc_set_val_encoressed(struct ghc_codec* ghcc, uint8_t val) {
     uint32_t i;
     for (i = 0; i < ghcc->size_enco; ++i) {
-            ghcc->compressed[i] = val;
+            ghcc->encoded[i] = val;
     }
     return i;
 }
 
 /*! Set all elements of ghcc's payload to value of val.
- * \param[inout] ghcc struct with member uncompressed as target.
+ * \param[inout] ghcc struct with member decoded as target.
  * \param[in]    val value to be set
  */
-static inline int32_t ghcc_set_val_decompressed(struct ghc_codec* ghcc, uint8_t val) {
+static inline int32_t ghcc_set_val_decoded(struct ghc_codec* ghcc, uint8_t val) {
     uint32_t i;
     for (i = GHC_DICT_PRE_LEN; i < ghcc->size_deco; ++i) {
-            ghcc->uncompressed[i] = val;
+            ghcc->decoded[i] = val;
     }
     return i;
 }
@@ -96,8 +96,8 @@ int main (void)
 
     struct ghc_codec test_decoder;
 
-    test_decoder.uncompressed = test_plod;
-    test_decoder.compressed = test_enco;
+    test_decoder.decoded = test_plod;
+    test_decoder.encoded = test_enco;
 
     test_decoder.na = 0;        /*!< Extension value for @n. */
     test_decoder.sa = 0;        /*!< Extension value for @s. */
@@ -118,7 +118,7 @@ int main (void)
         ghcc_set_seq_dict_pre(&test_decoder, ghc_suite_case_refs[suite_case].dictionary);
 
         /* Prepare compressor */
-        ghcc_set_seq_decompressed(&test_decoder, ghc_suite_case_refs[suite_case].payload);
+        ghcc_set_seq_decoded(&test_decoder, ghc_suite_case_refs[suite_case].payload);
         ghcc_set_val_encoressed(&test_decoder, 0);
 
         printf("Check compressiing of RFC7400 example %02"PRIu8":\n"
@@ -130,10 +130,10 @@ int main (void)
         printf("\nreturned with %03"PRId32"\n", result);
         //SHOW_GHC_CODER((&test_decoder));
 
-        printf("!comp_size_diff: %u\n", ghc_suite_case_refs[suite_case].compressed_len - test_decoder.pos_enco);
+        printf("!comp_size_diff: %u\n", ghc_suite_case_refs[suite_case].encoded_len - test_decoder.pos_enco);
         for (i=0; i < test_decoder.pos_enco; ++i) {
-            comp_val1 = ghc_suite_case_refs[suite_case].compressed[i];
-            comp_val2 = test_decoder.compressed[i];
+            comp_val1 = ghc_suite_case_refs[suite_case].encoded[i];
+            comp_val2 = test_decoder.encoded[i];
             if (comp_val1 != comp_val2) {
                 printf("%03"PRId32":0x%02X:0x%02X,%c", i,
                      comp_val1, comp_val2,
@@ -150,7 +150,7 @@ int main (void)
         /* Prepare decompressor */
         test_decoder.pos_enco = 0;
         test_decoder.pos_deco = GHC_DICT_PRE_LEN;
-        ghcc_set_val_decompressed(&test_decoder, 0);
+        ghcc_set_val_decoded(&test_decoder, 0);
 
         printf("Check decompressiing of RFC7400 example %02i:\n"
                "ghc_decode(ghc_suite_case_refs[%02i])\n",
@@ -161,7 +161,7 @@ int main (void)
 
         for (i=0; i < ghc_suite_case_refs[suite_case].payload_len; ++i) {
             comp_val1 = ghc_suite_case_refs[suite_case].payload[i];
-            comp_val2 = test_decoder.uncompressed[GHC_DICT_PRE_LEN + i];
+            comp_val2 = test_decoder.decoded[GHC_DICT_PRE_LEN + i];
             if (comp_val1 != comp_val2) {
                 printf("%03"PRIu32":0x%02X:0x%02X,%c", i,
                      comp_val1, comp_val2,
