@@ -13,7 +13,7 @@
  * of (de)compressor.
  *
  */
-struct ghc_coder {
+struct ghc_codec {
   /* uint32_t status; */       /*  */
   uint8_t* uncompressed;       /* source */
   uint8_t* compressed;         /* target */
@@ -28,12 +28,12 @@ struct ghc_coder {
 /*!
  * \param[inout] encoder struct holding the buffers and state and meta data.
  */
-int ghc_encode (struct ghc_coder* encoder);
+int ghc_encode (struct ghc_codec* encoder);
 
 
 /*!
  * \param[inout] decoder struct holding the buffers and state and meta data.
  */
-int ghc_decode (struct ghc_coder* decoder);
+int ghc_decode (struct ghc_codec* decoder);
 
 #endif /* GHC_CODEC_H */

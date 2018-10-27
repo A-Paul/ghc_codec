@@ -28,12 +28,12 @@
 #define EXT_FULL_OFFS_MASK  (EXT_BC_OFFS_MASK | BREF_BC_OFFS_MASK)
 
 
-static inline int8_t comp_not_full(struct ghc_coder* encoder)
+static inline int8_t comp_not_full(struct ghc_codec* encoder)
 {
     return (encoder->pos_comp < encoder->size_comp);
 }
 
-static inline int8_t payload_not_empty(struct ghc_coder* encoder)
+static inline int8_t payload_not_empty(struct ghc_codec* encoder)
 {
     return (encoder->pos_unco < encoder->size_unco);
 }
@@ -42,7 +42,7 @@ static inline int8_t payload_not_empty(struct ghc_coder* encoder)
 /*! Return the count of zero byte prefix in actual payload.
  */
 static inline uint32_t get_zeros_len(
-    struct ghc_coder* encoder, uint8_t* zeros, uint16_t pos_plod)
+    struct ghc_codec* encoder, uint8_t* zeros, uint16_t pos_plod)
 {
     uint16_t max_len = encoder->size_unco - pos_plod;
     uint8_t i = 0;
@@ -71,7 +71,7 @@ static inline uint32_t get_zeros_len(
  * \param[in]  pos_dict dictionary start position
  * \param[in]  pos_plod payload start position
  */
-static inline uint32_t get_match_len( struct ghc_coder* encoder,
+static inline uint32_t get_match_len( struct ghc_codec* encoder,
     uint16_t* match_len, uint16_t max_len, uint16_t pos_dict, uint16_t pos_plod)
 {
     uint32_t i = 0;
@@ -98,7 +98,7 @@ static inline uint32_t get_match_len( struct ghc_coder* encoder,
  * \param[in]  pload_idx start for temporary pload start
  */
 static inline void get_longest_match(
-    struct ghc_coder* encoder, uint16_t pload_idx,
+    struct ghc_codec* encoder, uint16_t pload_idx,
     uint16_t* dict_idx, uint16_t* max_len)
 {
     *dict_idx = 0;
@@ -135,7 +135,7 @@ static inline void get_longest_match(
 }
 
 
-static inline void write_bref_code(struct ghc_coder* encoder,
+static inline void write_bref_code(struct ghc_codec* encoder,
     uint16_t longest_match_len, uint16_t longest_match_offs)
 {
     uint16_t match_len = longest_match_len - GHC_BREF_CNT_ADD;
@@ -185,7 +185,7 @@ static inline void write_bref_code(struct ghc_coder* encoder,
  * encoder.pos_unco points at the first uncompressed entry
  * encoder.pos_comp points at the first uncompressed entry
  */
-int ghc_encode(struct ghc_coder* encoder)
+int ghc_encode(struct ghc_codec* encoder)
 {
     int32_t retval = -1;
     int32_t clean  = 0;

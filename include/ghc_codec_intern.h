@@ -10,7 +10,7 @@
  *
  * \param[inout]  decoder.
  */
-static inline void set_extensions(struct ghc_coder* decoder)
+static inline void set_extensions(struct ghc_codec* decoder)
 {
     decoder->na = (decoder->compressed[decoder->pos_comp] &
                   GHC_EXT_CNT_MASK)  >> GHC_EXT_CNT_RSHIFT;
@@ -32,7 +32,7 @@ static inline void set_extensions(struct ghc_coder* decoder)
  * \param[inout]  decoder.
  */
 static inline void set_backrefs(
-    uint8_t* const n, uint8_t* const s, struct ghc_coder* decoder)
+    uint8_t* const n, uint8_t* const s, struct ghc_codec* decoder)
 {
     *n = ((decoder->compressed[decoder->pos_comp] & GHC_BREF_CNT_MASK) >>
          GHC_BREF_CNT_RSHIFT) + decoder->na + GHC_BREF_CNT_ADD;
@@ -48,7 +48,7 @@ static inline void set_backrefs(
  * \param[inout]  decoder.
  * \param[in]     n number of copied bytes.
  */
-static inline void copy_literal( struct ghc_coder* decoder, uint8_t n)
+static inline void copy_literal( struct ghc_codec* decoder, uint8_t n)
 {
     while(n) {
         ++(decoder->pos_comp);
@@ -68,7 +68,7 @@ static inline void copy_literal( struct ghc_coder* decoder, uint8_t n)
  * \param[in]     s backreference index.
  */
 static inline void append_backreference(
-    struct ghc_coder* decoder, uint8_t n, uint8_t s)
+    struct ghc_codec* decoder, uint8_t n, uint8_t s)
 {
     while(n) {
         decoder->uncompressed[decoder->pos_unco] =
@@ -88,7 +88,7 @@ static inline void append_backreference(
  * \param[inout]  decoder.
  * \param[in]     n number of copied zero bytes.
  */
-static inline void append_zeros(struct ghc_coder* decoder, uint8_t n)
+static inline void append_zeros(struct ghc_codec* decoder, uint8_t n)
 {
     while(n) {
         decoder->uncompressed[decoder->pos_unco] = 0x0U;

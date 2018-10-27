@@ -19,7 +19,7 @@
  * \param[inout] ghcc struct with member compressed as target.
  * \param[in]    seq array which is copied
  */
-static inline int32_t ghcc_set_seq_compressed(struct ghc_coder* ghcc, uint8_t* seq) {
+static inline int32_t ghcc_set_seq_compressed(struct ghc_codec* ghcc, uint8_t* seq) {
     uint32_t i;
     for (i = 0; i < ghcc->size_comp; ++i) {
             ghcc->compressed[i] = seq[i];
@@ -31,7 +31,7 @@ static inline int32_t ghcc_set_seq_compressed(struct ghc_coder* ghcc, uint8_t* s
  * \param[inout] ghcc struct with member uncompressed as target.
  * \param[in]    seq array which is copied
  */
-static inline int32_t ghcc_set_seq_uncompressed(struct ghc_coder* ghcc, uint8_t* seq) {
+static inline int32_t ghcc_set_seq_uncompressed(struct ghc_codec* ghcc, uint8_t* seq) {
     uint32_t i = 0;
     uint32_t j = 0;
     for (i = GHC_DICT_PRE_LEN, j = 0; i < ghcc->size_unco; ++i, ++j) {
@@ -44,7 +44,7 @@ static inline int32_t ghcc_set_seq_uncompressed(struct ghc_coder* ghcc, uint8_t*
  * \param[inout] ghcc struct with member uncompressed as target.
  * \param[in]    seq array which is copied
  */
-static inline int32_t ghcc_set_seq_dict_pre(struct ghc_coder* ghcc, uint8_t* seq) {
+static inline int32_t ghcc_set_seq_dict_pre(struct ghc_codec* ghcc, uint8_t* seq) {
     uint32_t i;
     for (i = 0; i < GHC_DICT_PRE_LEN; ++i) {
             ghcc->uncompressed[i] = seq[i];
@@ -56,7 +56,7 @@ static inline int32_t ghcc_set_seq_dict_pre(struct ghc_coder* ghcc, uint8_t* seq
  * \param[inout] ghcc struct with member uncompressed as target.
  * \param[in]    val value to be set
  */
-static inline int32_t ghcc_set_val_compressed(struct ghc_coder* ghcc, uint8_t val) {
+static inline int32_t ghcc_set_val_compressed(struct ghc_codec* ghcc, uint8_t val) {
     uint32_t i;
     for (i = 0; i < ghcc->size_comp; ++i) {
             ghcc->compressed[i] = val;
@@ -68,7 +68,7 @@ static inline int32_t ghcc_set_val_compressed(struct ghc_coder* ghcc, uint8_t va
  * \param[inout] ghcc struct with member uncompressed as target.
  * \param[in]    val value to be set
  */
-static inline int32_t ghcc_set_val_uncompressed(struct ghc_coder* ghcc, uint8_t val) {
+static inline int32_t ghcc_set_val_uncompressed(struct ghc_codec* ghcc, uint8_t val) {
     uint32_t i;
     for (i = GHC_DICT_PRE_LEN; i < ghcc->size_unco; ++i) {
             ghcc->uncompressed[i] = val;
@@ -94,7 +94,7 @@ int main (void)
     uint8_t test_plod[GHC_DICT_PRE_LEN + RFC_EXAMPLES_PAYLOAD_MAX];
     uint8_t test_comp[RFC_EXAMPLES_COMPRESSED_MAX];
 
-    struct ghc_coder test_decoder;
+    struct ghc_codec test_decoder;
 
     test_decoder.uncompressed = test_plod;
     test_decoder.compressed = test_comp;

@@ -27,7 +27,7 @@ int main (void)
     uint8_t test_plod[GHC_DICT_PRE_LEN + RFC_EXAMPLES_PAYLOAD_MAX] = { 0 };
     uint8_t test_comp[RFC_EXAMPLES_COMPRESSED_MAX] = { 0 };
 
-    struct ghc_coder test_decoder;
+    struct ghc_codec test_decoder;
 
     for ( suite_case = 0; suite_case < num_cases; ++suite_case) {
 
