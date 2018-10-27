@@ -117,11 +117,11 @@ int main (void)
         /* Set dictionary */
         ghcc_set_seq_dict_pre(&test_decoder, ghc_suite_case_refs[suite_case].dictionary);
 
-        /* Prepare compressor */
+        /* Prepare encoder */
         ghcc_set_seq_decoded(&test_decoder, ghc_suite_case_refs[suite_case].payload);
         ghcc_set_val_encoressed(&test_decoder, 0);
 
-        printf("Check compressiing of RFC7400 example %02"PRIu8":\n"
+        printf("Check encoding of RFC7400 example %02"PRIu8":\n"
                "ghc_encode(ghc_suite_case_refs[%02"PRIu8"])\n"
                "[size_enco:%03u],[size_deco:%03u]\n",
                RFC7400_EXAMPLES_FIRST + suite_case, suite_case,
@@ -147,12 +147,12 @@ int main (void)
         }
         puts("\n");
 
-        /* Prepare decompressor */
+        /* Prepare decoder */
         test_decoder.pos_enco = 0;
         test_decoder.pos_deco = GHC_DICT_PRE_LEN;
         ghcc_set_val_decoded(&test_decoder, 0);
 
-        printf("Check decompressiing of RFC7400 example %02i:\n"
+        printf("Check decoding of RFC7400 example %02i:\n"
                "ghc_decode(ghc_suite_case_refs[%02i])\n",
                RFC7400_EXAMPLES_FIRST + suite_case, suite_case);
         result = ghc_decode(&test_decoder);

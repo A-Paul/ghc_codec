@@ -15,7 +15,7 @@ DEPS_DEBUG := $(shell mkdir ./$(DEPS_DIR) 1>/dev/null 2>&1)
 #OUTPUT_OPTION = -Wp,-MMD,$(DEPS_DIR)/$(*F).P $(OUTPUT_OPTION)
 COMPILE.c += -Wp,-MMD,$(DEPS_DIR)/$(*F).P
 
-# Choose default compressor implementation if
+# Choose default encoder implementation if
 TYPE_CODER ?= naive
 
 TARGETS = test_ghc_decode test_ghc_encode

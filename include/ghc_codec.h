@@ -10,7 +10,7 @@
 
 /*
  * Draft for one/two struct(s) carrying the buffers and meta data
- * of (de)compressor.
+ * of de/encoder.
  *
  */
 struct ghc_codec {

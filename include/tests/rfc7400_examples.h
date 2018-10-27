@@ -9,9 +9,9 @@
  *
  * Reference data collection contains pointers to byte arrays (uint8_t*)
  * with the data for:
- * - payload Reference for source of a compression, target of a decompression.
+ * - payload Reference for source of a encoding, target of a decoding.
  * - dictionary Pre filled lookup buffer.
- * - encoded Reference for target of a compression, source of a decompression.
+ * - encoded Reference for target of a encoding, source of a decoding.
  */
 struct ghc_case_ref {
     /*! @{ \name Array size data.
