@@ -89,7 +89,7 @@ static inline uint32_t get_match_len( struct ghc_codec* encoder,
 }
 
 
-/* Return position and lenghth for longest subsequence of #encoder.unco
+/*! Return position and lenghth for longest subsequence of #encoder.unco
  * tha matches subsequence of #encoder.unco starting at dict_idx.
  *
  * \param[out] dict_idx
