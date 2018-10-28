@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2018 Andreas "Paul" Pauli
+ *
+ * This file is subject to the terms and conditions of the GNU Lesser
+ * General Public License v2.1. See the file LICENSE in the top level
+ * directory for more details.
+ */
 #ifndef GHC_CODEC_H
 #define GHC_CODEC_H
 
@@ -20,8 +27,8 @@ struct ghc_codec{
     size_t size_enco;      /*!< bytecode size */
     uint16_t pos_deco;     /*!< payload  cursor */
     uint16_t pos_enco;     /*!< bytecode cursor */
-    uint8_t na;            /*!< length extension */
-    uint8_t sa;            /*!< index extension */
+    uint16_t na;           /*!< length extension */
+    uint16_t sa;           /*!< index extension */
 };
 
 /*!

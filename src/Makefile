@@ -5,7 +5,7 @@ APPLICATION = test_ghc_encode
 BOARD ?= native
 
 # This has to be the absolute path to the RIOT base directory:
-RIOTBASE := $(CURDIR)/../../RIOT.GHC
+RIOTBASE ?= $(CURDIR)/../../RIOT.GHC
 
 INCLUDES := -I$(CURDIR)/../include
 #SRC := $(CURDIR)/../test_ghc_encode.c

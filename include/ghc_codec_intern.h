@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) 2018 Andreas "Paul" Pauli
+ *
+ * This file is subject to the terms and conditions of the GNU Lesser
+ * General Public License v2.1. See the file LICENSE in the top level
+ * directory for more details.
+ */
 #ifndef GHC_CODEC_INTERN_H
 #define GHC_CODEC_INTERN_H
 
@@ -44,7 +51,7 @@ static inline void set_backrefs(
 /*!
  * Copy literal data bytes.
  * Limits are not validated and have to be asserted before invocation.
- * 
+ *
  * \param[inout]  decoder.
  * \param[in]     n number of copied bytes.
  */
